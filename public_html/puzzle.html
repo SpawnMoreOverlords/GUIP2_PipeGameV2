@@ -4,7 +4,7 @@
     <title></title>
     <script>
 
-        const PUZZLE_DIFFICULTY = 4;
+        const PUZZLE_DIFFICULTY = 6;
         const PUZZLE_HOVER_TINT = '#009900';
 
         var _stage;
@@ -24,7 +24,7 @@
         function init(){
             _img = new Image();
             _img.addEventListener('load',onImage,false);
-            _img.src = "mke.jpg";
+            _img.src = "newpipes-01.png";
         }
         function onImage(e){
             _pieceWidth = Math.floor(_img.width / PUZZLE_DIFFICULTY)
@@ -218,7 +218,7 @@
 </head>
 
 <body onload="init();">
-    <canvas id="canvas"></canvas>
+    <canvas id="canvas" ></canvas>
 </body>
 
 </html>
