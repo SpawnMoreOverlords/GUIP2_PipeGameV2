@@ -4,17 +4,17 @@
  <!--Abdulbari Pushed-->
     <title> Peach Pipe Game</title>
     <script>
-
+		
+		// Sets the number of rows and squares for each row -Difficulty- 
         const PUZZLE_DIFFICULTY = 6;
+        // Color for when hovering over a square (NOT NECESSERY)
         const PUZZLE_HOVER_TINT = '#009900';
 
+        
         var _stage;
         var _canvas;
-        
-        
-		var AbdulbariTest;
 		
-		
+	
         var _img;
         var _pieces;
         var _puzzleWidth;
@@ -26,11 +26,14 @@
 
         var _mouse;
 
+		//Set  "pipe image" for the puzzle 
         function init(){
             _img = new Image();
             _img.addEventListener('load',onImage,false);
             _img.src = "newpipes-01.png";
         }
+        
+        // Set width and height, dependent on the puzzle difficulty 
         function onImage(e){
             _pieceWidth = Math.floor(_img.width / PUZZLE_DIFFICULTY);
             _pieceHeight = Math.floor(_img.height / PUZZLE_DIFFICULTY);
@@ -39,6 +42,7 @@
             setCanvas();
             initPuzzle();
         }
+        // Set Canvas
         function setCanvas(){
             _canvas = document.getElementById('canvas');
             _stage = _canvas.getContext('2d');
@@ -46,6 +50,7 @@
             _canvas.height = _puzzleHeight;
             _canvas.style.border = "1px solid black";
         }
+        
         function initPuzzle(){
             _pieces = [];
             _mouse = {x:0,y:0};
@@ -105,6 +110,7 @@
             }
             document.onmousedown = onPuzzleClick;
         }
+        
         function onPuzzleClick(e){
             if(e.layerX || e.layerX == 0){
                 _mouse.x = e.layerX - _canvas.offsetLeft;
@@ -179,6 +185,7 @@
             _stage.restore();
             _stage.strokeRect( _mouse.x - (_pieceWidth / 2), _mouse.y - (_pieceHeight / 2), _pieceWidth,_pieceHeight);
         }
+        
         function pieceDropped(e){
             document.onmousemove = null;
             document.onmouseup = null;
