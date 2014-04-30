@@ -2,14 +2,16 @@
 <html>
 <head>
 
-    <title> Peach Pipe Game</title>
+    <title>Peach Pipe Puzzle</title>
     <script>
 		
-	// Sets the number of rows and squares for each row -Difficulty- 
-        const PUZZLE_DIFFICULTY = 6;
+	
         // Color for when hovering over a square (NOT NECESSERY)
         const PUZZLE_HOVER_TINT = '#009900';
 
+        // Sets the number of rows and columns
+        var _pipegrid_rows = 6;
+        var _pipegrid_cols = 6;
         
         var _stage;
         var _canvas;
@@ -26,22 +28,23 @@
 
         var _mouse;
 
-		//Set  "pipe image" for the puzzle 
+	// Set the "pipe image" for the puzzle 
         function init(){
             _img = new Image();
             _img.addEventListener('load',onImage,false);
             _img.src = "newpipes-01.png";
         }
         
-        // Set width and height, dependent on the puzzle difficulty 
+        // Set the width and height for each pipe, dependant on the number of pipes
         function onImage(e){
-            _pieceWidth = Math.floor(_img.width / PUZZLE_DIFFICULTY);
-            _pieceHeight = Math.floor(_img.height / PUZZLE_DIFFICULTY);
-            _puzzleWidth = _pieceWidth * PUZZLE_DIFFICULTY;
-            _puzzleHeight = _pieceHeight * PUZZLE_DIFFICULTY;
+            _pieceWidth = Math.floor(_img.width / _pipegrid_cols);
+            _pieceHeight = Math.floor(_img.height / _pipegrid_rows);
+            _puzzleWidth = _pieceWidth * _pipegrid_cols;
+            _puzzleHeight = _pieceHeight * _pipegrid_rows;
             setCanvas();
             initPuzzle();
         }
+        
         // Set Canvas
         function setCanvas(){
             _canvas = document.getElementById('canvas');
@@ -51,32 +54,41 @@
             _canvas.style.border = "1px solid black";
         }
         
+        // Init variables for the pipe puzzle (before the pipes are randomized)
         function initPuzzle(){
             _pieces = [];
             _mouse = {x:0,y:0};
             _currentPiece = null;
             _currentDropPiece = null;
             _stage.drawImage(_img, 0, 0, _puzzleWidth, _puzzleHeight, 0, 0, _puzzleWidth, _puzzleHeight);
-            createTitle("Click to Start Puzzle");
+            createTitle("Click to shuffle pipes!");
             buildPieces();
         }
+        
+        //Create a fillable rectangle, place text inside of it.
         function createTitle(msg){
+            //Create a fillable rectangle, params: fillRect(x, y, width, height). 
+            //Where x and y are the coordinates of the upper left corners position.
             _stage.fillStyle = "#000000";
-            _stage.globalAlpha = .4;
+            _stage.globalAlpha = .4;  
             _stage.fillRect(100,_puzzleHeight - 40,_puzzleWidth - 200,40);
             _stage.fillStyle = "#FFFFFF";
             _stage.globalAlpha = 1;
+            
+            //Place a message inside of the fillable rectangle. 
             _stage.textAlign = "center";
             _stage.textBaseline = "middle";
             _stage.font = "20px Arial";
             _stage.fillText(msg,_puzzleWidth / 2,_puzzleHeight - 20);
         }
+        
+        //Init an array of all of the pipe puzzle pieces. 
         function buildPieces(){
             var i;
             var piece;
             var xPos = 0;
             var yPos = 0;
-            for(i = 0;i < PUZZLE_DIFFICULTY * PUZZLE_DIFFICULTY;i++){
+            for(i = 0;i < _pipegrid_cols * _pipegrid_rows; i++){
                 piece = {};
                 piece.sx = xPos;
                 piece.sy = yPos;
@@ -87,8 +99,11 @@
                     yPos += _pieceHeight;
                 }
             }
+            //Set the mouse down command to call the ShufflePuzzle method
             document.onmousedown = shufflePuzzle;
         }
+        
+        //Shuffle the array, clear the stage, replace the peices. 
         function shufflePuzzle(){
             _pieces = shuffleArray(_pieces);
             _stage.clearRect(0,0,_puzzleWidth,_puzzleHeight);
@@ -108,9 +123,12 @@
                     yPos += _pieceHeight;
                 }
             }
+            //Set the mouse down command to call the onPuzzleClick method
             document.onmousedown = onPuzzleClick;
         }
         
+        //On click functionality -- 
+        //Need to edit this to rotate pipes instead of moving them
         function onPuzzleClick(e){
             if(e.layerX || e.layerX == 0){
                 _mouse.x = e.layerX - _canvas.offsetLeft;
@@ -131,6 +149,9 @@
                 document.onmouseup = pieceDropped;
             }
         }
+        
+        //Check to see if the user has clicked on a peice
+        //If they have, return the peice
         function checkPieceClicked(){
             var i;
             var piece;
@@ -145,6 +166,10 @@
             }
             return null;
         }
+        
+        //Need to change this to rotate peices, and check if the puzzle is 
+        //complete or not. (It's complete when a path has been created from
+        //the start point to the finish point. 
         function updatePuzzle(e){
             _currentDropPiece = null;
             if(e.layerX || e.layerX == 0){
@@ -221,6 +246,8 @@
             document.onmouseup = null;
             initPuzzle();
         }
+        
+        //Function for shuffling the pipes.
         function shuffleArray(o){
             for(var j, x, i = o.length; i; j = parseInt(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
             return o;
