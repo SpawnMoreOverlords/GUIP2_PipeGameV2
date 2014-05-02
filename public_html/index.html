@@ -30,15 +30,19 @@
 
 	// Set the "pipe image" for the puzzle 
         function init(){
-            _img = new Image();
-            _img.addEventListener('load',onImage,false);
-            _img.src = "newpipes-01.png";
+            _img_straight = new Image();
+            _img_straight.addEventListener('load',onImage,false);
+            _img_straight.src = "straightpipe-01.png";
+            
+            _img_bent = new Image();
+            _img_bent.addEventListener('load',onImage,false);
+            _img_bent.src = "bentpipe-01.png";
         }
         
         // Set the width and height for each pipe, dependant on the number of pipes
         function onImage(e){
-            _pieceWidth = Math.floor(_img.width / _pipegrid_cols);
-            _pieceHeight = Math.floor(_img.height / _pipegrid_rows);
+            _pieceWidth = Math.floor(_img_straight.width);
+            _pieceHeight = Math.floor(_img_straight.height);
             _puzzleWidth = _pieceWidth * _pipegrid_cols;
             _puzzleHeight = _pieceHeight * _pipegrid_rows;
             setCanvas();
@@ -60,7 +64,7 @@
             _mouse = {x:0,y:0};
             _currentPiece = null;
             _currentDropPiece = null;
-            _stage.drawImage(_img, 0, 0, _puzzleWidth, _puzzleHeight, 0, 0, _puzzleWidth, _puzzleHeight);
+            //_stage.drawImage(_img, 0, 0, _puzzleWidth, _puzzleHeight, 0, 0, _puzzleWidth, _puzzleHeight);
             createTitle("Click to shuffle pipes!");
             buildPieces();
         }
@@ -115,7 +119,7 @@
                 piece = _pieces[i];
                 piece.xPos = xPos;
                 piece.yPos = yPos;
-                _stage.drawImage(_img, piece.sx, piece.sy, _pieceWidth, _pieceHeight, xPos, yPos, _pieceWidth, _pieceHeight);
+                _stage.drawImage(_img_straight, piece.sx, piece.sy, _pieceWidth, _pieceHeight, xPos, yPos, _pieceWidth, _pieceHeight);
                 _stage.strokeRect(xPos, yPos, _pieceWidth,_pieceHeight);
                 xPos += _pieceWidth;
                 if(xPos >= _puzzleWidth){
@@ -150,14 +154,14 @@
                 // move to the center of the canvas
                 _stage.translate(_canvas.width/2, _canvas.height/2);
                 
-                _stage.globalAlpha = .9; //Set transparency ?
+                _stage.globalAlpha = 1; //Set transparency ?
                 
                 // rotate the canvas to the specified degrees
                 _stage.rotate(90*Math.PI/180);
                 
                 // draw the image
                 // since the context is rotated, the image will be rotated also
-                _stage.drawImage(_img, _currentPiece.sx, _currentPiece.sy, _pieceWidth, _pieceHeight, _currentPiece.xPos, _currentPiece.yPos, _pieceWidth, _pieceHeight);
+                _stage.drawImage(_img, _currentPiece.sx, _currentPiece.sy, _pieceWidth, _pieceHeight, -_currentPiece.xPos - (_canvas.width/2),-_currentPiece.yPos - (_canvas.height/2), _pieceWidth, _pieceHeight);
                 //_stage.drawImage(image,-image.width/2,-image.width/2);
                 //OLD: _stage.drawImage(_img, _currentPiece.sx, _currentPiece.sy, _pieceWidth, _pieceHeight, _mouse.x - (_pieceWidth / 2), _mouse.y - (_pieceHeight / 2), _pieceWidth, _pieceHeight);
                 
