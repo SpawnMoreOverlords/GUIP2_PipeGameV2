@@ -16,7 +16,9 @@
         var _stage;
         var _canvas;
 		
-	
+	var _test_degrees = 90;
+        
+        
         var _img;
         var _pieces;
         var _puzzleWidth;
@@ -156,8 +158,12 @@
                 
                 _stage.globalAlpha = 1; //Set transparency ?
                 
+                
+                
                 // rotate the canvas to the specified degrees
-                _stage.rotate(90*Math.PI/180);
+                _stage.rotate(_test_degrees*Math.PI/180);
+                
+                _test_degrees += 90;
                 
                 // draw the image
                 // since the context is rotated, the image will be rotated also.
@@ -169,7 +175,7 @@
                 //add the border again after restoring the translate and rotate states.
                 _stage.strokeRect(_currentPiece.xPos, _currentPiece.yPos, _pieceWidth, _pieceHeight);
                 
-                
+                //sresetPuzzleAndCheckWin();
                 //document.onmousemove = updatePuzzle;
                 //document.onmouseup = pieceDropped;
             }
