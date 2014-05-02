@@ -30,6 +30,20 @@
 
         var _mouse;
 
+        //straight pipe image
+        var straight_pipe = new Image();
+        var bended_pipe = new Image();
+        
+        //straight pipe object
+        var straightpipe = {
+        orientation: 0,
+        xpos :0,
+        ypos: 0,
+        width: 0,
+        height: 0,
+        image: null
+        };
+
 	// Set the "pipe image" for the puzzle 
         function init(){
             _img_straight = new Image();
