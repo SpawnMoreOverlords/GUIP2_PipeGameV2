@@ -119,7 +119,7 @@
                 piece = _pieces[i];
                 piece.xPos = xPos;
                 piece.yPos = yPos;
-                _stage.drawImage(_img_straight, piece.sx, piece.sy, _pieceWidth, _pieceHeight, xPos, yPos, _pieceWidth, _pieceHeight);
+                _stage.drawImage(_img_straight, xPos, yPos, _pieceWidth, _pieceHeight);
                 _stage.strokeRect(xPos, yPos, _pieceWidth,_pieceHeight);
                 xPos += _pieceWidth;
                 if(xPos >= _puzzleWidth){
@@ -152,7 +152,7 @@
                 _stage.save();
                 
                 // move to the center of the canvas
-                _stage.translate(_canvas.width/2, _canvas.height/2);
+                _stage.translate(_currentPiece.xPos + (_pieceWidth/2), _currentPiece.yPos + (_pieceHeight/2));
                 
                 _stage.globalAlpha = 1; //Set transparency ?
                 
@@ -161,8 +161,8 @@
                 
                 // draw the image
                 // since the context is rotated, the image will be rotated also
-                _stage.drawImage(_img, _currentPiece.sx, _currentPiece.sy, _pieceWidth, _pieceHeight, -_currentPiece.xPos - (_canvas.width/2),-_currentPiece.yPos - (_canvas.height/2), _pieceWidth, _pieceHeight);
-                //_stage.drawImage(image,-image.width/2,-image.width/2);
+                //_stage.drawImage(_img_straight, _currentPiece.xPos,_currentPiece.yPos, _pieceWidth, _pieceHeight);
+                _stage.drawImage(_img_straight,-_img_straight.width/2,-_img_straight.width/2);
                 //OLD: _stage.drawImage(_img, _currentPiece.sx, _currentPiece.sy, _pieceWidth, _pieceHeight, _mouse.x - (_pieceWidth / 2), _mouse.y - (_pieceHeight / 2), _pieceWidth, _pieceHeight);
                 
                 //add the border again:
