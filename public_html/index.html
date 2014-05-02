@@ -140,13 +140,32 @@
             }
             _currentPiece = checkPieceClicked();
             if(_currentPiece != null){
+               
                 _stage.clearRect(_currentPiece.xPos,_currentPiece.yPos,_pieceWidth,_pieceHeight);
+                
+                // save the unrotated context of the canvas so we can restore it later
+                // the alternative is to untranslate & unrotate after drawing
                 _stage.save();
-                _stage.globalAlpha = .9;
-                _stage.drawImage(_img, _currentPiece.sx, _currentPiece.sy, _pieceWidth, _pieceHeight, _mouse.x - (_pieceWidth / 2), _mouse.y - (_pieceHeight / 2), _pieceWidth, _pieceHeight);
+                
+                // move to the center of the canvas
+                _stage.translate(canvas.width/2,canvas.height/2);
+                
+                _stage.globalAlpha = .9; //Set transparency ?
+                
+                // rotate the canvas to the specified degrees
+                _stage.rotate(90*Math.PI/180);
+                
+                // draw the image
+                // since the context is rotated, the image will be rotated also
+                _stage.drawImage(_img, _currentPiece.sx, _currentPiece.sy, _pieceWidth, _pieceHeight, _currentPiece.sx, _currentPiece.sy, _pieceWidth, _pieceHeight);
+                //_stage.drawImage(_img,_currentPiece.sx,_currentPiece.sy);
+                
+                // we’re done with the rotating so restore the unrotated context
                 _stage.restore();
-                document.onmousemove = updatePuzzle;
-                document.onmouseup = pieceDropped;
+                
+                
+                //document.onmousemove = updatePuzzle;
+                //document.onmouseup = pieceDropped;
             }
         }
         
