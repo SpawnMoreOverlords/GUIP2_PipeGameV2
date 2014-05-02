@@ -159,6 +159,7 @@
                 // since the context is rotated, the image will be rotated also
                 _stage.drawImage(_img, _currentPiece.sx, _currentPiece.sy, _pieceWidth, _pieceHeight, _currentPiece.sx, _currentPiece.sy, _pieceWidth, _pieceHeight);
                 //_stage.drawImage(_img,_currentPiece.sx,_currentPiece.sy);
+                //OLD: _stage.drawImage(_img, _currentPiece.sx, _currentPiece.sy, _pieceWidth, _pieceHeight, _mouse.x - (_pieceWidth / 2), _mouse.y - (_pieceHeight / 2), _pieceWidth, _pieceHeight);
                 
                 // we’re done with the rotating so restore the unrotated context
                 _stage.restore();
