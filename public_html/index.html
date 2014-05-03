@@ -139,26 +139,18 @@
                 shapes.push(newRec);
                 */
                 
-                
-                
                 //Create a new pipe object
                 var newPipe = new Pipe();
                 newPipe.xPos = xPosition;
                 newPipe.yPos = yPosition;
                 
                 //Half and half   
-                /*
                 if (i < (_pipegrid_cols * _pipegrid_rows)/2) {
-                    _pipe.image = _img_straight;
+                    newPipe.image = _img_straight;
                 }
                 else {
-                    _pipe.image = _img_bent;
+                    newPipe.image = _img_bent;
                 } 
-                */
-                
-                //Testing:
-                newPipe.image = _img_straight;
-                //for(i = 0;i < 1000000000; i++){}
                 
                 //Push pipe structure into the pipe grid array!
                 _pipe_grid.push(newPipe); 
