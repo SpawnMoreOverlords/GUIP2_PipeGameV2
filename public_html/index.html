@@ -3,7 +3,7 @@
 <head>
 
     <title>Peach Pipe Puzzle</title>
-    <p id="demo"></p>
+    
     <script>
 		
         // Color for when hovering over a square (NOT NECESSERY)
@@ -326,11 +326,11 @@
         }
         
         function updateOrientation(currentPipe){
+            currentPipe.orientation += 90;
+            
             if (currentPipe.orientation == 360) {
                 currentPipe.orientation = 0;
             }
-            
-            currentPipe.orientation += 90;
             
             if (currentPipe.image == _img_straight) {
                 if (currentPipe.orientation == 0 || currentPipe.orientation == 180) {
@@ -343,7 +343,7 @@
                     currentPipe.openLeft = false;
                     currentPipe.openUp = true;
                     currentPipe.openRight = false;
-                    currentPipe.openDown = true; 
+                    currentPipe.openDown = true;
                 }
             }
             
@@ -373,12 +373,20 @@
                     currentPipe.openDown = true;
                 }
             }
+            
+            document.getElementById("test1").innerHTML = 'left= '+currentPipe.openLeft;
+            document.getElementById("test2").innerHTML = 'up= '+currentPipe.openUp;
+            document.getElementById("test3").innerHTML = 'right= '+currentPipe.openRight;
+            document.getElementById("test4").innerHTML = 'down= '+currentPipe.openDown;
         }
         
         function checkIfWin() {
-            if (_pipe_grid[0].openLeft = true) {
+            if (_pipe_grid[0].openLeft == true) {
                 //How the hell can we check if it's game over O.o
-                document.getElementById("demo").innerHTML = 'its here';
+                document.getElementById("demo").innerHTML = 'pipe zero is connected to the left';
+            }
+            else {
+                document.getElementById("demo").innerHTML = 'pipe zero is not connected';
             }
         }
 
@@ -387,6 +395,11 @@
 
 <body onload="init();">
     <canvas id="canvas" ></canvas>
+    <p id="demo"></p>
+    <p id="test1"></p>
+    <p id="test2"></p>
+    <p id="test3"></p>
+    <p id="test4"></p>
 </body>
 
 </html>
