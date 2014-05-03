@@ -46,6 +46,9 @@
         this.openDown = false;
         this.transparency = 1;
         this.image = null;
+        
+        this.connectedToA = false;
+        this.connectedToB = false; 
         }
         
         //array to store the pipe struct in
@@ -201,6 +204,9 @@
                 _stage.globalAlpha = 1; //Set transparency 
                      
                 updateOrientation(_currentPipe);
+                
+                //Check if pipe is connected to another pipe
+                checkConnection(_currentPipe);
                      
                 // rotate the canvas to the specified degrees
                 _stage.rotate(_currentPipe.orientation*Math.PI/180);
@@ -380,13 +386,78 @@
             document.getElementById("test4").innerHTML = 'down= '+currentPipe.openDown;
         }
         
-        function checkIfWin() {
-            if (_pipe_grid[0].openLeft == true) {
-                //How the hell can we check if it's game over O.o
-                document.getElementById("demo").innerHTML = 'pipe zero is connected to the left';
+        function checkConnection(currentPipe) {
+            //Get the pipe grid array reference
+            var index = 0;
+            for(i = 0;i < _pipe_grid.length;i++){
+                if (currentPipe == _pipe_grid[i]) {
+                    index = i;
+                    break;
+                }
             }
-            else {
-                document.getElementById("demo").innerHTML = 'pipe zero is not connected';
+            
+            if (_pipe_grid[index].openLeft == true && _pipe_grid[index].openRight == true) {
+                
+                //If this pipe is the start pipe
+                if (_pipe_grid[index] == _pipe_grid[0]) {
+                    currentPipe.connectedToA = true; 
+                }
+                
+                //If this pipe is the end pipe
+                else if (_pipe_grid[index] == _pipe_grid[_pipe_grid.length-1]) {
+                    currentPipe.connectedToB = true; 
+                }
+                
+                //If a pipe exists to the left of this pipe:
+                else if(typeof _pipe_grid[index-1] != 'undefined'){
+                    //Check if that pipe is connected to this pipe
+                    if (_pipe_grid[index-1].openRight == true) {
+                        //set the current pipes connectedToX values to the same as
+                        //the pipe it's connected to.
+                        currentPipe.connectedToA == _pipe_grid[index-1].connectedToA;
+                        currentPipe.connectedToB == _pipe_grid[index-1].connectedToB;
+                    }
+                }
+                
+                //If this is not the start pipe
+                //or the end pipe
+                //or connected to a pipe to the left
+                else {
+                    currentPipe.connectedToA = false; 
+                    currentPipe.connectedToB = false; 
+                }   
+            }
+            if (_pipe_grid[index].openUp == true) {
+                
+            }
+            if (_pipe_grid[index].openRight == true) {
+                
+            }
+            if (_pipe_grid[index].openDown == true) {
+                
+            }
+            
+            //If connected to A and B == true then it's game over.
+            
+            //DEBUGGING:
+            document.getElementById("debugConnections").innerHTML = 'connectedA: '+currentPipe.connectedToA+'        connectedB: '+currentPipe.connectedToB;
+        }
+        
+        function checkIfWin() {
+            for(i = 0;i < _pipe_grid.length;i++){
+                
+                if (_pipe_grid[0].openLeft == true) {
+                    
+                    //How the hell can we check if it's game over O.o
+                    document.getElementById("demo").innerHTML = 'pipe zero is connected to the left';
+
+                    //Find the pipe it's connected to:
+                    //if 
+
+                }
+                else {
+                    document.getElementById("demo").innerHTML = 'pipe zero is not connected';
+                }
             }
         }
 
@@ -400,6 +471,8 @@
     <p id="test2"></p>
     <p id="test3"></p>
     <p id="test4"></p>
+    
+    <p id="debugConnections"></p>
 </body>
 
 </html>
