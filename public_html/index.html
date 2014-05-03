@@ -26,9 +26,7 @@
         //pipe object.
         var _pipeWidth;
         var _pipeHeight;
-        
-        
-        
+
         var _currentPipe;
         var _currentDropPipe;  
 
@@ -144,8 +142,10 @@
                 newPipe.xPos = xPosition;
                 newPipe.yPos = yPosition;
                 
+                
+                
                 //Half and half   
-                if (i < (_pipegrid_cols * _pipegrid_rows)/2) {
+                if ( (Math.floor((Math.random() * 10) + 1)) > 2) {
                     newPipe.image = _img_straight;
                 }
                 else {
@@ -209,10 +209,8 @@
                 // move to the center of the canvas
                 _stage.translate(_currentPipe.xPos + (_pipeWidth/2), _currentPipe.yPos + (_pipeHeight/2));
                 
-                _stage.globalAlpha = 1; //Set transparency ?
-                
-                
-                
+                _stage.globalAlpha = 1; //Set transparency 
+                     
                 // rotate the canvas to the specified degrees
                 _stage.rotate(_test_degrees*Math.PI/180);
                 
