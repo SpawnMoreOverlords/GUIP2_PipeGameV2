@@ -199,7 +199,7 @@
                 
                 _stage.globalAlpha = 1; //Set transparency 
                      
-                _currentPipe.orientation += 90;     
+                updateOrientation(_currentPipe);
                      
                 // rotate the canvas to the specified degrees
                 _stage.rotate(_currentPipe.orientation*Math.PI/180);
@@ -321,6 +321,56 @@
         function shuffleArray(o){
             for(var j, x, i = o.length; i; j = parseInt(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
             return o;
+        }
+        
+        function updateOrientation(currentPipe){
+            if (currentPipe.orientation == 360) {
+                currentPipe.orientation = 0;
+            }
+            
+            currentPipe.orientation += 90;
+            
+            if (currentPipe.image == _img_straight) {
+                if (currentPipe.orientation == 0 || currentPipe.orientation == 180) {
+                    currentPipe.openLeft = true;
+                    currentPipe.openUp = false;
+                    currentPipe.openRight = true;
+                    currentPipe.openDown = false;
+                }
+                else {
+                    currentPipe.openLeft = false;
+                    currentPipe.openUp = true;
+                    currentPipe.openRight = false;
+                    currentPipe.openDown = true; 
+                }
+            }
+            
+            if (currentPipe.image == _img_bent) {
+                if (currentPipe.orientation == 0) {
+                    currentPipe.openLeft = true;
+                    currentPipe.openUp = false;
+                    currentPipe.openRight = false;
+                    currentPipe.openDown = true;
+                }
+                else if (currentPipe.orientation == 90) {
+                    currentPipe.openLeft = true;
+                    currentPipe.openUp = true;
+                    currentPipe.openRight = false;
+                    currentPipe.openDown = false;
+                }
+                else if (currentPipe.orientation == 180) {
+                    currentPipe.openLeft = false;
+                    currentPipe.openUp = true;
+                    currentPipe.openRight = true;
+                    currentPipe.openDown = false;
+                }
+                else if (currentPipe.orientation == 270) {
+                    currentPipe.openLeft = false;
+                    currentPipe.openUp = false;
+                    currentPipe.openRight = true;
+                    currentPipe.openDown = true;
+                }
+            }
         }
 
     </script>
