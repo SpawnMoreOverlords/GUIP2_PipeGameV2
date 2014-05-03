@@ -214,6 +214,7 @@
                 //add the border again after restoring the translate and rotate states.
                 _stage.strokeRect(_currentPipe.xPos, _currentPipe.yPos, _pipeWidth, _pipeHeight);
                 
+                checkIfWin();
                 //sresetPuzzleAndCheckWin();
                 //document.onmousemove = updatePuzzle;
                 //document.onmouseup = pipeDropped;
@@ -370,6 +371,12 @@
                     currentPipe.openRight = true;
                     currentPipe.openDown = true;
                 }
+            }
+        }
+        
+        function checkIfWin() {
+            if (_pipe_grid[0].openLeft = true) {
+                //How the hell can we check if it's game over O.o
             }
         }
 
