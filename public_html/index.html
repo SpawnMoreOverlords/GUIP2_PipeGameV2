@@ -92,8 +92,8 @@
             _currentDroppipe = null;
             //Draw a start up image :)
             _stage.drawImage(_img_splash, 0, 0, _puzzleWidth, _puzzleHeight, 0, 100, _puzzleWidth, _puzzleHeight);
-            createTitle("Click to shuffle pipes!");
-            buildGrid();
+            createTitle("Double click to start game!!");
+            document.onmousedown = buildGrid;
         }
         
         //Create a fillable rectangle, place text inside of it.
@@ -120,41 +120,25 @@
             var yPosition = 0;
             for(i = 0;i < _pipegrid_cols * _pipegrid_rows; i++){
                 
-                //Testing creating a new object:
-                /*
-                var newRec = new shape();
-                newRec.fill = rec.fill;
-                newRec.font = rec.font;
-                newRec.h = rec.h;
-                newRec.name = rec.name;
-                newRec.prototype = rec.prototype;
-                newRec.r = rec.r;
-                newRec.size = rec.size;
-                newRec.text = rec.text;
-                newRec.w = rec.w;
-                newRec.x = rec.x;
-                newRec.y = rec.y;
-                shapes.push(newRec);
-                */
-                
                 //Create a new pipe object
                 var newPipe = new Pipe();
                 newPipe.xPos = xPosition;
                 newPipe.yPos = yPosition;
+                newPipe.image = null;
                 
-                
-                
-                //Half and half   
-                if ( (Math.floor((Math.random() * 10) + 1)) > 2) {
+                //Randomize between bent and straight pipes  
+                if (Math.random() < 0.5) {
+                    if (newPipe.image == null)
                     newPipe.image = _img_straight;
                 }
                 else {
+                    if (newPipe.image == null)
                     newPipe.image = _img_bent;
                 } 
                 
                 //Push pipe structure into the pipe grid array!
                 _pipe_grid.push(newPipe); 
-                
+  
                 //Update the position ready for the placement of next pipe:
                 xPosition += _pipeWidth;
                 if(xPosition >= _puzzleWidth){
@@ -163,21 +147,17 @@
                 }
             }
             //Set the mouse down command to call the ShufflePuzzle method
-            document.onmousedown = shufflePuzzle;
+            document.onmousedown = drawPuzzle;
         }
         
         //Shuffle the array, clear the stage, replace the peices. 
-        function shufflePuzzle(){
+        function drawPuzzle(){
             //_pipe_grid = shuffleArray(_pipe_grid);
             _stage.clearRect(0,0,_puzzleWidth,_puzzleHeight);
             var i;
             var pipe;
-            //var xPos = 0;
-            //var yPos = 0;
             for(i = 0;i < _pipe_grid.length;i++){
                 pipe = _pipe_grid[i];
-                //pipe.xPos = xPos;
-                //pipe.yPos = yPos;
                 
                 _stage.drawImage(pipe.image, pipe.xPos, pipe.yPos, _pipeWidth, _pipeHeight);
                 _stage.strokeRect(pipe.xPos, pipe.yPos, _pipeWidth, _pipeHeight);
