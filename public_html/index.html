@@ -43,6 +43,7 @@
         this.openUp = false;
         this.openRight = false;
         this.openDown = false;
+        this.transparency = 1;
         this.image = null;
         }
         
@@ -124,16 +125,23 @@
                 var newPipe = new Pipe();
                 newPipe.xPos = xPosition;
                 newPipe.yPos = yPosition;
-                newPipe.image = null;
                 
                 //Randomize between bent and straight pipes  
                 if (Math.random() < 0.5) {
                     if (newPipe.image == null)
                     newPipe.image = _img_straight;
+                    newPipe.openLeft = true;
+                    newPipe.openUp = false;
+                    newPipe.openRight = true;
+                    newPipe.openDown = false;
                 }
                 else {
                     if (newPipe.image == null)
                     newPipe.image = _img_bent;
+                    newPipe.openLeft = true;
+                    newPipe.openUp = false;
+                    newPipe.openRight = false;
+                    newPipe.openDown = true;
                 } 
                 
                 //Push pipe structure into the pipe grid array!
@@ -191,14 +199,14 @@
                 
                 _stage.globalAlpha = 1; //Set transparency 
                      
+                _currentPipe.orientation += 90;     
+                     
                 // rotate the canvas to the specified degrees
-                _stage.rotate(_test_degrees*Math.PI/180);
-                
-                _test_degrees += 90;
+                _stage.rotate(_currentPipe.orientation*Math.PI/180);
                 
                 // draw the image
                 // since the context is rotated, the image will be rotated also.
-                _stage.drawImage(_img_straight,-_img_straight.width/2,-_img_straight.width/2);
+                _stage.drawImage(_currentPipe.image,-_img_straight.width/2,-_img_straight.width/2);
                 
                 // we’re done with the rotating so restore the unrotated context
                 _stage.restore();
