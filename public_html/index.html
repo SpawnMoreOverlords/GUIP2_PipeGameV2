@@ -3,6 +3,7 @@
 <head>
 
     <title>Peach Pipe Puzzle</title>
+    <p id="demo"></p>
     <script>
 		
         // Color for when hovering over a square (NOT NECESSERY)
@@ -377,6 +378,7 @@
         function checkIfWin() {
             if (_pipe_grid[0].openLeft = true) {
                 //How the hell can we check if it's game over O.o
+                document.getElementById("demo").innerHTML = 'its here';
             }
         }
 
