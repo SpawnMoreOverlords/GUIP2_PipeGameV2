@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        
+        
+        <script>
+            //Need to change this to rotate peices, and check if the puzzle is 
+        //complete or not. (It's complete when a path has been created from
+        //the start point to the finish point. 
+        function updatePuzzle(e){
+            _currentDroppipe = null;
+            if(e.layerX || e.layerX == 0){
+                _mouse.x = e.layerX - _canvas.offsetLeft;
+                _mouse.y = e.layerY - _canvas.offsetTop;
+            }
+            else if(e.offsetX || e.offsetX == 0){
+                _mouse.x = e.offsetX - _canvas.offsetLeft;
+                _mouse.y = e.offsetY - _canvas.offsetTop;
+            }
+            _stage.clearRect(0,0,_puzzleWidth,_puzzleHeight);
+            var i;
+            var pipe;
+            for(i = 0;i < _pipe_grid.length;i++){
+                pipe = _pipe_grid[i];
+                if(pipe == _currentPipe){
+                    continue;
+                }
+                _stage.drawImage(_img, pipe.sx, pipe.sy, _pipeWidth, _pipeHeight, pipe.xPos, pipe.yPos, _pipeWidth, _pipeHeight);
+                _stage.strokeRect(pipe.xPos, pipe.yPos, _pipeWidth,_pipeHeight);
+                if(_currentDroppipe == null){
+                    if(_mouse.x < pipe.xPos || _mouse.x > (pipe.xPos + _pipeWidth) || _mouse.y < pipe.yPos || _mouse.y > (pipe.yPos + _pipeHeight)){
+                        //NOT OVER
+                    }
+                    else{
+                        _currentDroppipe = pipe;
+                        _stage.save();
+                        _stage.globalAlpha = .4;
+                        _stage.fillStyle = PUZZLE_HOVER_TINT;
+                        _stage.fillRect(_currentDroppipe.xPos,_currentDroppipe.yPos,_pipeWidth, _pipeHeight);
+                        _stage.restore();
+                    }
+                }
+            }
+            _stage.save();
+            _stage.globalAlpha = .6;
+            _stage.drawImage(_img, _currentPipe.sx, _currentPipe.sy, _pipeWidth, _pipeHeight, _mouse.x - (_pipeWidth / 2), _mouse.y - (_pipeHeight / 2), _pipeWidth, _pipeHeight);
+            _stage.restore();
+            _stage.strokeRect( _mouse.x - (_pipeWidth / 2), _mouse.y - (_pipeHeight / 2), _pipeWidth,_pipeHeight);
+        }
+        
+        function pipeDropped(e){
+            document.onmousemove = null;
+            document.onmouseup = null;
+            if(_currentDroppipe != null){
+                var tmp = {xPos:_currentPipe.xPos,yPos:_currentPipe.yPos};
+                _currentPipe.xPos = _currentDroppipe.xPos;
+                _currentPipe.yPos = _currentDroppipe.yPos;
+                _currentDroppipe.xPos = tmp.xPos;
+                _currentDroppipe.yPos = tmp.yPos;
+            }
+            resetPuzzleAndCheckWin();
+        }
+        function resetPuzzleAndCheckWin(){
+            _stage.clearRect(0,0,_puzzleWidth,_puzzleHeight);
+            var gameWin = true;
+            var i;
+            var pipe;
+            for(i = 0;i < _pipe_grid.length;i++){
+                pipe = _pipe_grid[i];
+                _stage.drawImage(_img, pipe.sx, pipe.sy, _pipeWidth, _pipeHeight, pipe.xPos, pipe.yPos, _pipeWidth, _pipeHeight);
+                _stage.strokeRect(pipe.xPos, pipe.yPos, _pipeWidth,_pipeHeight);
+                if(pipe.xPos != pipe.sx || pipe.yPos != pipe.sy){
+                    gameWin = false;
+                }
+            }
+            if(gameWin){
+                setTimeout(gameOver,500);
+            }
+        }
+        
+        //Function for shuffling the pipes.
+        function shuffleArray(o){
+            for(var j, x, i = o.length; i; j = parseInt(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+            return o;
+        }
+        </script>
+        
+        
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <div>TODO write content</div>
+    </body>
+</html>
