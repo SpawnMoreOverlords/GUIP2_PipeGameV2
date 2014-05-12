@@ -36,6 +36,12 @@
 
             var _mouse;
 
+			// Variables for Undo/Redo
+			var historyListXpos = [];
+			var historyListYpos = [];
+			var historyListOrientation = [];
+			
+
             //Pipe class
             function Pipe() {
                 this.orientation = 0;
@@ -53,7 +59,7 @@
                 this.connectedToA = false;
                 this.connectedToB = false;
             }
-
+ 			
             //array to store the pipe struct in
             var _pipe_grid = [];
 
@@ -165,7 +171,7 @@
                 document.onmousedown = drawPuzzle;
             }
 
-            //Shuffle the array, clear the stage, replace the peices. 
+            //Shuffle the array, clear the stage, replace the pieces. 
             function drawPuzzle() {
                 //_pipe_grid = shuffleArray(_pipe_grid);
                 _stage.clearRect(0, 0, _puzzleWidth, _puzzleHeight);
@@ -192,6 +198,9 @@
                     _mouse.y = e.offsetY - _canvas.offsetTop;
                 }
                 _currentPipe = checkpipeClicked();
+                
+                //HistoryList(_currentPipe);
+                
                 if (_currentPipe !== null) {
 
                     _stage.clearRect(_currentPipe.xPos, _currentPipe.yPos, _pipeWidth, _pipeHeight);
@@ -204,7 +213,13 @@
                     _stage.translate(_currentPipe.xPos + (_pipeWidth / 2), _currentPipe.yPos + (_pipeHeight / 2));
 
                     _stage.globalAlpha = 1; //Set transparency 
-
+					
+					
+					//Save action to arrays for Undo/redo
+					historyListXpos.unshift(_currentPipe.xPos);
+					historyListYpos.unshift(_currentPipe.yPos);
+					historyListOrientation.unshift(_currentPipe.orientation);
+					
                     updateOrientation(_currentPipe);
 
                     //Check if pipe is connected to another pipe
@@ -221,7 +236,7 @@
                     _stage.restore();
 
                     //add the border again after restoring the translate and rotate states.
-                    _stage.strokeRect(_currentPipe.xPos, _currentPipe.yPos, _pipeWidth, _pipeHeight);
+                   _stage.strokeRect(_currentPipe.xPos, _currentPipe.yPos, _pipeWidth, _pipeHeight);
 
 
 
@@ -231,6 +246,8 @@
                     //document.onmouseup = pipeDropped;
                 }
             }
+  
+
 
             //Check to see if the user has clicked on a pipe
             //If they have, return the pipe object
@@ -255,10 +272,15 @@
                 document.onmouseup = null;
                 initPuzzle();
             }
-
+			
+			
+	 
+			  
             function updateOrientation(currentPipe) {
+                
                 currentPipe.orientation += 90;
-
+           
+          
                 if (currentPipe.orientation === 360) {
                     currentPipe.orientation = 0;
                 }
@@ -309,8 +331,14 @@
                 document.getElementById("test2").innerHTML = 'up= ' + currentPipe.openUp;
                 document.getElementById("test3").innerHTML = 'right= ' + currentPipe.openRight;
                 document.getElementById("test4").innerHTML = 'down= ' + currentPipe.openDown;
-            }
+                
+                document.getElementById("testUndo").innerHTML = 'Orientation = '+ historyListOrientation  +   '<br />' +' xPos ='
+                + historyListXpos +  '<br />' + ' yPos = ' + historyListYpos;
 
+            }
+		
+			
+			
             function checkConnection(_currentpipe_index) {
                 var pipe = _pipe_grid[_currentpipe_index];
 
@@ -491,11 +519,18 @@
 //                }
 //            }
 
+	
+				
+			
         </script>
     </head>
 
     <body onload="init();">
         <canvas id="canvas" ></canvas>
+        <button onclick="undo()">Undo</button>
+        <button onclick="redo()">Redo</button>
+         <p id="testUndo"></p>
+          <p id="ButtonWorks"></p>
         <p id="demo"></p>
         <p id="test1"></p>
         <p id="test2"></p>
@@ -505,7 +540,10 @@
         <p id="demo1"></p>
         <p id="demo2"></p>
         <p id="demo3"></p>
+        
         <p id="debugConnections"></p>
+         
+
     </body>
 
 </html>
