@@ -229,8 +229,6 @@
 					historyListPipeType.push(_currentPipe.image);
 					
 					
-					console.log(_currentPipe.image);//ERROR CHECK
-					
                     updateOrientation(_currentPipe);
 
                     //Check if pipe is connected to another pipe
@@ -259,7 +257,7 @@
             }
   
 			function undo(){
-				 _stage.clearRect(historyListXpos[historyListXpos.length-1], historyListYpos[historyListXpos.length-1], _pipeWidth, _pipeHeight);
+				 	_stage.clearRect(historyListXpos[historyListXpos.length-1], historyListYpos[historyListXpos.length-1], _pipeWidth, _pipeHeight);
 
                     // save the unrotated context of the canvas so we can restore it later
                     // the alternative is to untranslate & unrotate after drawing
@@ -288,15 +286,52 @@
                     //add the border again after restoring the translate and rotate states.
                    _stage.strokeRect(historyListXpos[historyListXpos.length-1], historyListYpos[historyListYpos.length-1], _pipeWidth, _pipeHeight);
 				
-					//Remove action and send it to REDO stack
-					REDOhistoryListXpos.push(historyListXpos.pop[historyListXpos.length-1]);
-					REDOhistoryListYpos.push(historyListYpos.pop[historyListYpos.length-1]);
-					REDOhistoryListOrientation.push(historyListOrientation.pop[historyListOrientation.length-1]);
-					REDOhistoryListPipeType.push(historyListPipeType.pop[historyListPipeType.length-1]);
-						console.log("Undo Button Working.");
+					//Remove action and send it to REDO stack  
+					REDOhistoryListXpos.push(historyListXpos.pop());
+					REDOhistoryListYpos.push(historyListYpos.pop());
+					REDOhistoryListOrientation.push(historyListOrientation.pop());
+					REDOhistoryListPipeType.push(historyListPipeType.pop());
+						
+						
+					console.log("Undo Button Working.");
 			}
 			
 			function redo(){
+					
+					_stage.clearRect(REDOhistoryListXpos[REDOhistoryListXpos.length-1], REDOhistoryListYpos[REDOhistoryListYpos.length-1], _pipeWidth, _pipeHeight);
+
+                    // save the unrotated context of the canvas so we can restore it later
+                    // the alternative is to untranslate & unrotate after drawing
+                    _stage.save();
+
+                    // move to the center of the canvas
+                    _stage.translate(REDOhistoryListXpos[REDOhistoryListXpos.length-1] + (_pipeWidth / 2), REDOhistoryListYpos[REDOhistoryListYpos.length-1] + (_pipeHeight / 2));
+
+                    _stage.globalAlpha = 1; //Set transparency 
+					
+                    updateOrientation(REDOhistoryListOrientation[REDOhistoryListOrientation.length-1]);
+
+                    //Check if pipe is connected to another pipe
+                    //checkConnection(_currentPipe);
+
+                    // rotate the canvas to the specified degrees
+                    _stage.rotate(REDOhistoryListOrientation[REDOhistoryListOrientation.length-1] * Math.PI / 180);
+
+                    // draw the image
+                    // since the context is rotated, the image will be rotated also.
+                    _stage.drawImage(REDOhistoryListPipeType[REDOhistoryListPipeType.length-1], -_img_straight.width / 2, -_img_straight.width / 2);
+
+                    // weâare done with the rotating so restore the unrotated context
+                    _stage.restore();
+
+                    //add the border again after restoring the translate and rotate states.
+                   _stage.strokeRect(REDOhistoryListXpos[REDOhistoryListXpos.length-1], REDOhistoryListYpos[REDOhistoryListYpos.length-1], _pipeWidth, _pipeHeight);
+				
+					//Remove action and send it to UNDO stack  
+					historyListXpos.push(REDOhistoryListXpos.pop());
+					historyListYpos.push(REDOhistoryListYpos.pop());
+					historyListOrientation.push(REDOhistoryListOrientation.pop());
+					historyListPipeType.push(REDOhistoryListPipeType.pop());
 				
 					console.log("Redo Button Working." + REDOhistoryListYpos[0] + historyListOrientation[0]);
 			}
