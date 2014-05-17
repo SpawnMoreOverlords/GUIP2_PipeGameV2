@@ -8,6 +8,20 @@
         <title>Peach Pipe Puzzle</title>
 
         <script>
+            
+            
+            //animation variables
+            var xMin = 0;
+            //var xMax = $(window).height() - ball.height();
+            var xMax = 1000;
+            var pos = 0;
+            var dir = 1;
+            var speed = 8;
+            var fps = 60;
+            var interval = 1000 / fps;
+            
+            
+            
 
             // Color for when hovering over a square (NOT NECESSERY)
             const PUZZLE_HOVER_TINT = '#009900';
@@ -228,16 +242,16 @@
                 
                 if (_currentPipe !== null) {
 
-                    _stage.clearRect(_currentPipe.xPos, _currentPipe.yPos, _pipeWidth, _pipeHeight);
+                 //   _stage.clearRect(_currentPipe.xPos, _currentPipe.yPos, _pipeWidth, _pipeHeight);
 
                     // save the unrotated context of the canvas so we can restore it later
                     // the alternative is to untranslate & unrotate after drawing
-                    _stage.save();
+                 //   _stage.save();
 
                     // move to the center of the canvas
-                    _stage.translate(_currentPipe.xPos + (_pipeWidth / 2), _currentPipe.yPos + (_pipeHeight / 2));
+                 //   _stage.translate(_currentPipe.xPos + (_pipeWidth / 2), _currentPipe.yPos + (_pipeHeight / 2));
 
-                    _stage.globalAlpha = 1; //Set transparency 
+                  //  _stage.globalAlpha = 1; //Set transparency 
 					
 					
 					//Save action to arrays for Undo/redo
@@ -247,26 +261,26 @@
 					historyListPipeType.push(_currentPipe.image);
 					
 					
+		 draw(_currentPipe);			
 					
-					
-                    updateOrientation(_currentPipe);
+                  //  updateOrientation(_currentPipe);
 			
                     
                     //Check if pipe is connected to another pipe
                     //checkConnection(_currentPipe);
 
                     // rotate the canvas to the specified degrees
-                    _stage.rotate(_currentPipe.orientation * Math.PI / 180);
+                  //  _stage.rotate(_currentPipe.orientation * Math.PI / 180);
 
                     // draw the image
                     // since the context is rotated, the image will be rotated also.
-                    _stage.drawImage(_currentPipe.image, -_img_straight.width / 2, -_img_straight.width / 2);
+                  //  _stage.drawImage(_currentPipe.image, -_img_straight.width / 2, -_img_straight.width / 2);
 
                     // we’re done with the rotating so restore the unrotated context
-                    _stage.restore();
+                 //   _stage.restore();
 
                     //add the border again after restoring the translate and rotate states.
-                   _stage.strokeRect(_currentPipe.xPos, _currentPipe.yPos, _pipeWidth, _pipeHeight);
+                  // _stage.strokeRect(_currentPipe.xPos, _currentPipe.yPos, _pipeWidth, _pipeHeight);
 
 					//reset the REDO arrays 
 				REDOhistoryListXpos = [];
@@ -684,6 +698,75 @@
 //            }
 
 	
+        
+        //Crazy timeout function for animation - 
+        (function() {
+            var lastTime = 0;
+            var vendors = ['ms', 'moz', 'webkit', 'o'];
+            for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+                window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
+                window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame'] 
+                                           || window[vendors[x]+'CancelRequestAnimationFrame'];
+            }
+
+            if (!window.requestAnimationFrame)
+                window.requestAnimationFrame = function(callback, element) {
+                    var currTime = new Date().getTime();
+                    var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+                    var id = window.setTimeout(function() { callback(currTime + timeToCall); }, 
+                      timeToCall);
+                    lastTime = currTime + timeToCall;
+                    return id;
+                };
+
+            if (!window.cancelAnimationFrame)
+                window.cancelAnimationFrame = function(id) {
+                    clearTimeout(id);
+                };
+        }());
+        
+        function draw(_currentPipe) {
+            setTimeout(function() {
+                window.requestAnimationFrame(draw);
+
+                degrees = _currentPipe.orientation;
+                degrees++;
+                if(degrees > 359){
+                        degrees = 1;
+                }
+                
+                
+                /*
+                if (pos > xMax || pos < xMin) {
+                    dir *= -1;
+                }
+
+                pos += (dir * speed);
+                */
+                
+                
+                //ball.css('top', pos + 'px');
+                _stage.clearRect(_currentPipe.xPos, _currentPipe.yPos, _pipeWidth, _pipeHeight);
+                // save the unrotated context of the canvas so we can restore it later
+                // the alternative is to untranslate & unrotate after drawing
+                _stage.save();
+                // move to the center of the canvas
+                _stage.translate(pos + (_pipeWidth / 2), _currentPipe.yPos + (_pipeHeight / 2));
+                _stage.globalAlpha = 0.5; //Set transparency 							
+                //updateOrientation(_currentPipe);		                    
+                //Check if pipe is connected to another pipe
+                //checkConnection(_currentPipe);
+                // rotate the canvas to the specified degrees
+                _stage.rotate(degrees * Math.PI / 180);
+                // draw the image
+                // since the context is rotated, the image will be rotated also.
+                _stage.drawImage(_currentPipe.image, -_img_straight.width / 2, -_img_straight.width / 2);
+
+                //we’re done with the rotating so restore the unrotated context
+                _stage.restore();
+                    
+            }, interval);
+        }
 				
 			
         </script>
