@@ -268,7 +268,12 @@
                     //add the border again after restoring the translate and rotate states.
                    _stage.strokeRect(_currentPipe.xPos, _currentPipe.yPos, _pipeWidth, _pipeHeight);
 
-
+					//reset the REDO arrays 
+				REDOhistoryListXpos = [];
+				REDOhistoryListYpos = [];
+				REDOhistoryListOrientation = [];
+				REDOhistoryListPipeType = [];
+				
 
                     //checkWin();
                     //sresetPuzzleAndCheckWin();
@@ -276,25 +281,21 @@
                     //document.onmouseup = pipeDropped;
                 }
                 
+                
                 if(historyListXpos[0]==null)
                 undoButton.disabled = true;
                 else{
                 undoButton.disabled = false;
-
                 }
-                //else {
-                //undoButton.disabled = 'true';}
-
+              
+				redoButton.disabled = true;
                
                 
             }
   
 			function undo(){
   
-
-                                     
-                                        
-					NormalOrUndoClick = 0;
+  			     	NormalOrUndoClick = 0;
 					
 				 	_stage.clearRect(historyListXpos[historyListXpos.length-1], historyListYpos[historyListXpos.length-1], _pipeWidth, _pipeHeight);
 
@@ -342,8 +343,16 @@
                     REDOhistoryListOpenUp.push(historyListOpenUp.pop());
                   	REDOhistoryListOpenRight.push(historyListOpenRight.pop());
                    	REDOhistoryListOpenDown.push(historyListOpenDown.pop());	
-					
+                   	
+                  if(REDOhistoryListXpos[0]==null)
+					redoButton.disabled = true;
+					else{
+						redoButton.disabled = false;
+						}
+
 						
+						
+					
 					console.log("Undo Button Working.");
 			}
 			
@@ -484,7 +493,8 @@
                  }   
                 
                 document.getElementById("testUndo").innerHTML = 'Orientation = '+ historyListOrientation  +   '<br />' +' xPos ='
-                + historyListXpos +  '<br />' + ' yPos = ' + historyListYpos + '<br />' + historyListOpenUp;
+                + historyListXpos +  '<br />' + ' yPos = ' + historyListYpos + '<br />' + historyListOpenUp + '<br />' + 'REDOOrientation = '+ REDOhistoryListOrientation  +   '<br />' +' REDOxPos ='
+                + REDOhistoryListXpos +  '<br />' + ' REDOyPos = ' + REDOhistoryListYpos + '<br />' + REDOhistoryListOpenUp;;
 
             }
 		
@@ -587,15 +597,18 @@
                     }
                 }
                 if (_currentpipe_index === 35 && _pipe_grid[35].openRight === true) {
-                    document.getElementById("demo3").innerHTML = 'YOU WON';
-                }
-                
-            }
-            function checkWin() {
-                if (_pipe_grid[0].openLeft === true) {
-                    checkConnection(0);
-                }
-            }
+                    document.getElementById("demo3").innerHTML = 'YOU WON'
+					;
+					}
+
+					}
+					function checkWin() {
+						if (_pipe_grid[0].openLeft === true) {
+							checkConnection(0);
+						}
+					}
+
+				
             //Get the pipe grid array reference
             //            var index = 0;
             //            for(i = 0;i < _pipe_grid.length;i++){
@@ -679,7 +692,7 @@
     <body onload="init();">
         <canvas id="canvas" ></canvas>
         <button onclick="undo()" id='undoButton' disabled>Undo</button>
-        <button onclick="redo()">Redo</button>
+        <button onclick="redo()"id='redoButton' disabled>Redo</button>
          <p id="testUndo"></p>
           <p id="ButtonWorks"></p>
         <p id="demo"></p>
