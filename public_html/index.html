@@ -50,31 +50,6 @@
 
             var _mouse;
 
-            // Variables for Undo
-            var historyListXpos = [];
-            var historyListYpos = [];
-            var historyListOrientation = [];
-            var historyListPipeType = [];
-
-            var historyListOpenLeft = [];
-            var historyListOpenUp = [];
-            var historyListOpenRight = [];
-            var historyListOpenDown = [];
-
-            var NormalOrUndoClick;
-
-            // Variables for Redo
-            var REDOhistoryListXpos = [];
-            var REDOhistoryListYpos = [];
-            var REDOhistoryListOrientation = [];
-            var REDOhistoryListPipeType = [];
-
-            var REDOhistoryListOpenLeft = [];
-            var REDOhistoryListOpenUp = [];
-            var REDOhistoryListOpenRight = [];
-            var REDOhistoryListOpenDown = [];
-
-
             var PipesStack = [];
             var RedoStack = [];
 
@@ -271,12 +246,13 @@
 
                     _stage.globalAlpha = 1; //Set transparency 
 					
-					
+					/*
 					//Save action to arrays for Undo/redo
 					historyListXpos.push(_currentPipe.xPos);
 					historyListYpos.push(_currentPipe.yPos);
 					historyListOrientation.push(_currentPipe.orientation);
 					historyListPipeType.push(_currentPipe.image);
+                                         */
 					
 					
                     //draw(_currentPipe);			
@@ -312,7 +288,7 @@
                     //document.onmouseup = pipeDropped;
                 }
 
-
+                /*
                 if (historyListXpos[0] == null)
                     undoButton.disabled = true;
                 else {
@@ -321,7 +297,7 @@
                 if (0 < RedoStack.length) {
                     redobutton.disabled = false;
                 }
-
+                */
                 //redoButton.disabled = false;
 
 
@@ -579,6 +555,7 @@
                 document.getElementById("test3").innerHTML = 'right= ' + currentPipe.openRight;
                 document.getElementById("test4").innerHTML = 'down= ' + currentPipe.openDown;
 
+                /*
                 if (NormalOrUndoClick = 1) {
                     //Save logic
                     historyListOpenLeft.push(currentPipe.openLeft);
@@ -587,11 +564,13 @@
                     historyListOpenDown.push(currentPipe.openDown);
 
                 }
-
+                
+               
                 document.getElementById("testUndo").innerHTML = 'Orientation = ' + historyListOrientation + '<br />' + ' xPos ='
                         + historyListXpos + '<br />' + ' yPos = ' + historyListYpos + '<br />' + historyListOpenUp + '<br />' + 'REDOOrientation = ' + REDOhistoryListOrientation + '<br />' + ' REDOxPos ='
                         + REDOhistoryListXpos + '<br />' + ' REDOyPos = ' + REDOhistoryListYpos + '<br />' + REDOhistoryListOpenUp;
                 ;
+            */
 
             }
 
@@ -654,6 +633,7 @@
                 document.getElementById("test3").innerHTML = 'right= ' + currentPipe.openRight;
                 document.getElementById("test4").innerHTML = 'down= ' + currentPipe.openDown;
 
+                /*
                 if (NormalOrUndoClick = 1) {
                     //Save logic
                     historyListOpenLeft.push(currentPipe.openLeft);
@@ -662,11 +642,13 @@
                     historyListOpenDown.push(currentPipe.openDown);
 
                 }
+                
 
                 document.getElementById("testUndo").innerHTML = 'Orientation = ' + historyListOrientation + '<br />' + ' xPos ='
                         + historyListXpos + '<br />' + ' yPos = ' + historyListYpos + '<br />' + historyListOpenUp + '<br />' + 'REDOOrientation = ' + REDOhistoryListOrientation + '<br />' + ' REDOxPos ='
                         + REDOhistoryListXpos + '<br />' + ' REDOyPos = ' + REDOhistoryListYpos + '<br />' + REDOhistoryListOpenUp;
                 ;
+                */
 
             }
 
@@ -956,7 +938,8 @@
 
     <body onload="init();">
         <canvas id="canvas" ></canvas>
-        <button onclick="undo()" id='undoButton' disabled>Undo</button>
+        <button onclick="undo()" id='undoButton'>Undo</button>
+        <!--- <button onclick="undo()" id='undoButton' disabled>Undo</button> --->
         <button onclick="redo()" id='redoButton' >Redo</button>
        
         <a onmouseup="undo();" href="javascript:undo();">Undo</a>
