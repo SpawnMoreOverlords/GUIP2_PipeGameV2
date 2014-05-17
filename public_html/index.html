@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
     <head>
-		
-		<!--Link to the style sheet file /-->
-		<link rel="stylesheet" type="text/css" href="CSS/index.css">
-        
+
+        <!--Link to the style sheet file /-->
+        <link rel="stylesheet" type="text/css" href="CSS/index.css">
+
         <title>Peach Pipe Puzzle</title>
 
         <script>
@@ -36,30 +36,33 @@
 
             var _mouse;
 
-			// Variables for Undo
-			var historyListXpos = [];
-			var historyListYpos = [];
-			var historyListOrientation = [];
-			var historyListPipeType = [];
-			
-			var historyListOpenLeft = [];
-			var historyListOpenUp = [];
-			var historyListOpenRight = [];
-			var historyListOpenDown  = [];
-            
+            // Variables for Undo
+            var historyListXpos = [];
+            var historyListYpos = [];
+            var historyListOrientation = [];
+            var historyListPipeType = [];
+
+            var historyListOpenLeft = [];
+            var historyListOpenUp = [];
+            var historyListOpenRight = [];
+            var historyListOpenDown = [];
+
             var NormalOrUndoClick;
-			
-			// Variables for Redo
-			var REDOhistoryListXpos = [];
-			var REDOhistoryListYpos = [];
-			var REDOhistoryListOrientation = [];
-			var REDOhistoryListPipeType = [];
-			
-			var REDOhistoryListOpenLeft = [];
-			var REDOhistoryListOpenUp = [];
-			var REDOhistoryListOpenRight = [];
-			var REDOhistoryListOpenDown  = [];
-			
+
+            // Variables for Redo
+            var REDOhistoryListXpos = [];
+            var REDOhistoryListYpos = [];
+            var REDOhistoryListOrientation = [];
+            var REDOhistoryListPipeType = [];
+
+            var REDOhistoryListOpenLeft = [];
+            var REDOhistoryListOpenUp = [];
+            var REDOhistoryListOpenRight = [];
+            var REDOhistoryListOpenDown = [];
+
+
+            var PipesStack = [];
+            var RedoStack = [];
 
             //Pipe class
             function Pipe() {
@@ -78,7 +81,7 @@
                 this.connectedToA = false;
                 this.connectedToB = false;
             }
- 			
+
             //array to store the pipe struct in
             var _pipe_grid = [];
 
@@ -208,12 +211,9 @@
 
             //On click functionality -- rotates the clicked pipe
             function onPuzzleClick(e) {
-            	
-	         	NormalOrUndoClick = 1;
-				
-				
-			
-			
+
+                NormalOrUndoClick = 1;
+
                 if (e.layerX || e.layerX === 0) {
                     _mouse.x = e.layerX - _canvas.offsetLeft;
                     _mouse.y = e.layerY - _canvas.offsetTop;
@@ -223,9 +223,9 @@
                     _mouse.y = e.offsetY - _canvas.offsetTop;
                 }
                 _currentPipe = checkpipeClicked();
-                
+
                 //HistoryList(_currentPipe);
-                
+
                 if (_currentPipe !== null) {
 
                     _stage.clearRect(_currentPipe.xPos, _currentPipe.yPos, _pipeWidth, _pipeHeight);
@@ -238,20 +238,22 @@
                     _stage.translate(_currentPipe.xPos + (_pipeWidth / 2), _currentPipe.yPos + (_pipeHeight / 2));
 
                     _stage.globalAlpha = 1; //Set transparency 
-					
-					
-					//Save action to arrays for Undo/redo
-					historyListXpos.push(_currentPipe.xPos);
-					historyListYpos.push(_currentPipe.yPos);
-					historyListOrientation.push(_currentPipe.orientation);
-					historyListPipeType.push(_currentPipe.image);
-					
-					
-					
-					
+
+
+                    //Save action to arrays for Undo/redo
+                    historyListXpos.push(_currentPipe.xPos);
+                    historyListYpos.push(_currentPipe.yPos);
+                    historyListOrientation.push(_currentPipe.orientation);
+                    historyListPipeType.push(_currentPipe.image);
+
+
+
+
                     updateOrientation(_currentPipe);
-			
-                    
+                    //adds it to the stack 
+                    PipesStack.push(_currentPipe);
+                    document.getElementById("num_of_things_in_the_stack").innerHTML = 'num_of_things_in_the_stack: ' + PipesStack.length;
+
                     //Check if pipe is connected to another pipe
                     //checkConnection(_currentPipe);
 
@@ -266,135 +268,201 @@
                     _stage.restore();
 
                     //add the border again after restoring the translate and rotate states.
-                   _stage.strokeRect(_currentPipe.xPos, _currentPipe.yPos, _pipeWidth, _pipeHeight);
+                    _stage.strokeRect(_currentPipe.xPos, _currentPipe.yPos, _pipeWidth, _pipeHeight);
 
-					//reset the REDO arrays 
-				REDOhistoryListXpos = [];
-				REDOhistoryListYpos = [];
-				REDOhistoryListOrientation = [];
-				REDOhistoryListPipeType = [];
-				
+                    //reset the REDO arrays 
+                    REDOhistoryListXpos = [];
+                    REDOhistoryListYpos = [];
+                    REDOhistoryListOrientation = [];
+                    REDOhistoryListPipeType = [];
 
+                    
                     //checkWin();
                     //sresetPuzzleAndCheckWin();
                     //document.onmousemove = updatePuzzle;
                     //document.onmouseup = pipeDropped;
                 }
-                
-                
-                if(historyListXpos[0]==null)
-                undoButton.disabled = true;
-                else{
-                undoButton.disabled = false;
+
+
+                if (historyListXpos[0] == null)
+                    undoButton.disabled = true;
+                else {
+                    undoButton.disabled = false;
                 }
-              
-				redoButton.disabled = true;
-               
-                
+                if (0 < RedoStack.length) {
+                    redobutton.disabled = false;
+                }
+
+                //redoButton.disabled = false;
+
+
             }
-  
-			function undo(){
-  
-  			     	NormalOrUndoClick = 0;
-					
-				 	_stage.clearRect(historyListXpos[historyListXpos.length-1], historyListYpos[historyListXpos.length-1], _pipeWidth, _pipeHeight);
+
+            function undo() {
+                var last_pipe = PipesStack.pop();
+                RedoStack.push(last_pipe);
+                document.getElementById("last_element").innerHTML = 'Last Elements XPosition: ' + last_pipe.xPos;
+                 _stage.clearRect(last_pipe.xPos, last_pipe.yPos, _pipeWidth, _pipeHeight);
 
                     // save the unrotated context of the canvas so we can restore it later
                     // the alternative is to untranslate & unrotate after drawing
                     _stage.save();
 
                     // move to the center of the canvas
-                    _stage.translate(historyListXpos[historyListXpos.length-1] + (_pipeWidth / 2), historyListYpos[historyListYpos.length-1] + (_pipeHeight / 2));
+                    _stage.translate(last_pipe.xPos + (_pipeWidth / 2), last_pipe.yPos + (_pipeHeight / 2));
 
                     _stage.globalAlpha = 1; //Set transparency 
-					
-                    updateOrientation(historyListOrientation[historyListOrientation.length-1]);
 
-               
-                   
-                    //Check if pipe is connected to another pipe
-                    //checkConnection(_currentPipe);
+                    updateOrientationForUndo(last_pipe);
 
                     // rotate the canvas to the specified degrees
-                    _stage.rotate(historyListOrientation[historyListOrientation.length-1] * Math.PI / 180);
+                    _stage.rotate(last_pipe.orientation * Math.PI / 180);
 
                     // draw the image
                     // since the context is rotated, the image will be rotated also.
-                    _stage.drawImage(historyListPipeType[historyListPipeType.length-1], -_img_straight.width / 2, -_img_straight.width / 2);
+                    _stage.drawImage(last_pipe.image, -_img_straight.width / 2, -_img_straight.width / 2);
 
                     // we’re done with the rotating so restore the unrotated context
                     _stage.restore();
 
                     //add the border again after restoring the translate and rotate states.
-                   _stage.strokeRect(historyListXpos[historyListXpos.length-1], historyListYpos[historyListYpos.length-1], _pipeWidth, _pipeHeight);
-                   
-                 
-                   
-				
-					//Remove action and send it to REDO stack  
-					REDOhistoryListXpos.push(historyListXpos.pop());
-					REDOhistoryListYpos.push(historyListYpos.pop());
-					REDOhistoryListOrientation.push(historyListOrientation.pop());
-					REDOhistoryListPipeType.push(historyListPipeType.pop());
-					
-					
-					//Remove action and send to REDO
-					REDOhistoryListOpenLeft.push(historyListOpenLeft.pop());
-                    REDOhistoryListOpenUp.push(historyListOpenUp.pop());
-                  	REDOhistoryListOpenRight.push(historyListOpenRight.pop());
-                   	REDOhistoryListOpenDown.push(historyListOpenDown.pop());	
-                   	
-                  if(REDOhistoryListXpos[0]==null)
-					redoButton.disabled = true;
-					else{
-						redoButton.disabled = false;
-						}
+                    _stage.strokeRect(last_pipe.xPos, last_pipe.yPos, _pipeWidth, _pipeHeight);
 
-						
-						
-					
-					console.log("Undo Button Working.");
-			}
-			
-			function redo(){
-					
-					_stage.clearRect(REDOhistoryListXpos[REDOhistoryListXpos.length-1], REDOhistoryListYpos[REDOhistoryListYpos.length-1], _pipeWidth, _pipeHeight);
+                /*
+                NormalOrUndoClick = 0;
+                _stage.clearRect(historyListXpos[historyListXpos.length - 1], historyListYpos[historyListXpos.length - 1], _pipeWidth, _pipeHeight);
+
+                // save the unrotated context of the canvas so we can restore it later
+                // the alternative is to untranslate & unrotate after drawing
+                _stage.save();
+
+                // move to the center of the canvas
+                _stage.translate(historyListXpos[historyListXpos.length - 1] + (_pipeWidth / 2), historyListYpos[historyListYpos.length - 1] + (_pipeHeight / 2));
+
+                _stage.globalAlpha = 1; //Set transparency 
+
+                updateOrientation(historyListOrientation[historyListOrientation.length - 1]);
+
+                //Check if pipe is connected to another pipe
+                //checkConnection(_currentPipe);
+
+                // rotate the canvas to the specified degrees
+                _stage.rotate(historyListOrientation[historyListOrientation.length - 1] * Math.PI / 180);
+
+                // draw the image
+                // since the context is rotated, the image will be rotated also.
+                _stage.drawImage(historyListPipeType[historyListPipeType.length - 1], -_img_straight.width / 2, -_img_straight.width / 2);
+
+                // we’re done with the rotating so restore the unrotated context
+                _stage.restore();
+
+                //add the border again after restoring the translate and rotate states.
+                _stage.strokeRect(historyListXpos[historyListXpos.length - 1], historyListYpos[historyListYpos.length - 1], _pipeWidth, _pipeHeight);
+
+
+
+
+                //Remove action and send it to REDO stack  
+                REDOhistoryListXpos.push(historyListXpos.pop());
+                REDOhistoryListYpos.push(historyListYpos.pop());
+                REDOhistoryListOrientation.push(historyListOrientation.pop());
+                REDOhistoryListPipeType.push(historyListPipeType.pop());
+
+
+                //Remove action and send to REDO
+                REDOhistoryListOpenLeft.push(historyListOpenLeft.pop());
+                REDOhistoryListOpenUp.push(historyListOpenUp.pop());
+                REDOhistoryListOpenRight.push(historyListOpenRight.pop());
+                REDOhistoryListOpenDown.push(historyListOpenDown.pop());
+
+                if (REDOhistoryListXpos[0] == null)
+                    redoButton.disabled = true;
+                else {
+                    redoButton.disabled = false;
+                }
+
+
+*/
+
+                console.log("Undo Button Working.");
+            }
+
+            function redo() {
+                var last_pipe_in_redo = RedoStack.pop();
+                PipesStack.push(last_pipe_in_redo);
+                
+                _stage.clearRect(last_pipe_in_redo.xPos, last_pipe_in_redo.yPos, _pipeWidth, _pipeHeight);
 
                     // save the unrotated context of the canvas so we can restore it later
                     // the alternative is to untranslate & unrotate after drawing
                     _stage.save();
 
                     // move to the center of the canvas
-                    _stage.translate(REDOhistoryListXpos[REDOhistoryListXpos.length-1] + (_pipeWidth / 2), REDOhistoryListYpos[REDOhistoryListYpos.length-1] + (_pipeHeight / 2));
+                    _stage.translate(last_pipe_in_redo.xPos + (_pipeWidth / 2), last_pipe_in_redo.yPos + (_pipeHeight / 2));
 
                     _stage.globalAlpha = 1; //Set transparency 
-					
-                    updateOrientation(REDOhistoryListOrientation[REDOhistoryListOrientation.length-1]);
+
+                    updateOrientation(last_pipe_in_redo);
+                    //adds it to the stack 
+                    PipesStack.push(last_pipe_in_redo);
+                    document.getElementById("num_of_things_in_the_stack").innerHTML = 'num_of_things_in_the_stack: ' + PipesStack.length;
 
                     //Check if pipe is connected to another pipe
                     //checkConnection(_currentPipe);
 
                     // rotate the canvas to the specified degrees
-                    _stage.rotate(REDOhistoryListOrientation[REDOhistoryListOrientation.length-1] * Math.PI / 180);
+                    _stage.rotate(last_pipe_in_redo.orientation * Math.PI / 180);
 
                     // draw the image
                     // since the context is rotated, the image will be rotated also.
-                    _stage.drawImage(REDOhistoryListPipeType[REDOhistoryListPipeType.length-1], -_img_straight.width / 2, -_img_straight.width / 2);
+                    _stage.drawImage(last_pipe_in_redo.image, -_img_straight.width / 2, -_img_straight.width / 2);
 
-                    // we�are done with the rotating so restore the unrotated context
+                    // we’re done with the rotating so restore the unrotated context
                     _stage.restore();
 
                     //add the border again after restoring the translate and rotate states.
-                   _stage.strokeRect(REDOhistoryListXpos[REDOhistoryListXpos.length-1], REDOhistoryListYpos[REDOhistoryListYpos.length-1], _pipeWidth, _pipeHeight);
-				
-					//Remove action and send it to UNDO stack  
-					historyListXpos.push(REDOhistoryListXpos.pop());
-					historyListYpos.push(REDOhistoryListYpos.pop());
-					historyListOrientation.push(REDOhistoryListOrientation.pop());
-					historyListPipeType.push(REDOhistoryListPipeType.pop());
-				
-					console.log("Redo Button Working." + REDOhistoryListYpos[0] + historyListOrientation[0]);
-			}
+                    _stage.strokeRect(last_pipe_in_redo.xPos, last_pipe_in_redo.yPos, _pipeWidth, _pipeHeight);
+
+                
+                /*
+                _stage.clearRect(REDOhistoryListXpos[REDOhistoryListXpos.length - 1], REDOhistoryListYpos[REDOhistoryListYpos.length - 1], _pipeWidth, _pipeHeight);
+
+                // save the unrotated context of the canvas so we can restore it later
+                // the alternative is to untranslate & unrotate after drawing
+                _stage.save();
+
+                // move to the center of the canvas
+                _stage.translate(REDOhistoryListXpos[REDOhistoryListXpos.length - 1] + (_pipeWidth / 2), REDOhistoryListYpos[REDOhistoryListYpos.length - 1] + (_pipeHeight / 2));
+
+                _stage.globalAlpha = 1; //Set transparency 
+
+                updateOrientation(REDOhistoryListOrientation[REDOhistoryListOrientation.length - 1]);
+
+                //Check if pipe is connected to another pipe
+                //checkConnection(_currentPipe);
+
+                // rotate the canvas to the specified degrees
+                _stage.rotate(REDOhistoryListOrientation[REDOhistoryListOrientation.length - 1] * Math.PI / 180);
+
+                // draw the image
+                // since the context is rotated, the image will be rotated also.
+                _stage.drawImage(REDOhistoryListPipeType[REDOhistoryListPipeType.length - 1], -_img_straight.width / 2, -_img_straight.width / 2);
+
+                // we�are done with the rotating so restore the unrotated context
+                _stage.restore();
+
+                //add the border again after restoring the translate and rotate states.
+                _stage.strokeRect(REDOhistoryListXpos[REDOhistoryListXpos.length - 1], REDOhistoryListYpos[REDOhistoryListYpos.length - 1], _pipeWidth, _pipeHeight);
+
+                //Remove action and send it to UNDO stack  
+                historyListXpos.push(REDOhistoryListXpos.pop());
+                historyListYpos.push(REDOhistoryListYpos.pop());
+                historyListOrientation.push(REDOhistoryListOrientation.pop());
+                historyListPipeType.push(REDOhistoryListPipeType.pop());
+
+                console.log("Redo Button Working." + REDOhistoryListYpos[0] + historyListOrientation[0]);
+           */
+             }
 
             //Check to see if the user has clicked on a pipe
             //If they have, return the pipe object
@@ -419,15 +487,14 @@
                 document.onmouseup = null;
                 initPuzzle();
             }
-			
-			
-	 
-			  
+
+
+
+
             function updateOrientation(currentPipe) {
                 
                 currentPipe.orientation += 90;
-           
-          
+
                 if (currentPipe.orientation === 360) {
                     currentPipe.orientation = 0;
                 }
@@ -472,34 +539,109 @@
                         currentPipe.openRight = true;
                         currentPipe.openDown = true;
                     }
-                   
-                        
-       
-                    
+
+
+
+
                 }
 
                 document.getElementById("test1").innerHTML = 'left= ' + currentPipe.openLeft;
                 document.getElementById("test2").innerHTML = 'up= ' + currentPipe.openUp;
                 document.getElementById("test3").innerHTML = 'right= ' + currentPipe.openRight;
                 document.getElementById("test4").innerHTML = 'down= ' + currentPipe.openDown;
-                
-                 if (NormalOrUndoClick = 1){
-                 		//Save logic
-					historyListOpenLeft.push(currentPipe.openLeft);
+
+                if (NormalOrUndoClick = 1) {
+                    //Save logic
+                    historyListOpenLeft.push(currentPipe.openLeft);
                     historyListOpenUp.push(currentPipe.openUp);
-                  	historyListOpenRight.push(currentPipe.openRight);
-                   	historyListOpenDown.push(currentPipe.openDown);	
-                 	
-                 }   
-                
-                document.getElementById("testUndo").innerHTML = 'Orientation = '+ historyListOrientation  +   '<br />' +' xPos ='
-                + historyListXpos +  '<br />' + ' yPos = ' + historyListYpos + '<br />' + historyListOpenUp + '<br />' + 'REDOOrientation = '+ REDOhistoryListOrientation  +   '<br />' +' REDOxPos ='
-                + REDOhistoryListXpos +  '<br />' + ' REDOyPos = ' + REDOhistoryListYpos + '<br />' + REDOhistoryListOpenUp;;
+                    historyListOpenRight.push(currentPipe.openRight);
+                    historyListOpenDown.push(currentPipe.openDown);
+
+                }
+
+                document.getElementById("testUndo").innerHTML = 'Orientation = ' + historyListOrientation + '<br />' + ' xPos ='
+                        + historyListXpos + '<br />' + ' yPos = ' + historyListYpos + '<br />' + historyListOpenUp + '<br />' + 'REDOOrientation = ' + REDOhistoryListOrientation + '<br />' + ' REDOxPos ='
+                        + REDOhistoryListXpos + '<br />' + ' REDOyPos = ' + REDOhistoryListYpos + '<br />' + REDOhistoryListOpenUp;
+                ;
 
             }
-		
-			
-			
+
+            function updateOrientationForUndo(currentPipe) {
+                
+                currentPipe.orientation -= 90;
+
+                if (currentPipe.orientation === 360) {
+                    currentPipe.orientation = 0;
+                }
+
+                if (currentPipe.image === _img_straight) {
+                    if (currentPipe.orientation === 0 || currentPipe.orientation === 180) {
+                        currentPipe.openLeft = true;
+                        currentPipe.openUp = false;
+                        currentPipe.openRight = true;
+                        currentPipe.openDown = false;
+                    }
+                    else {
+                        currentPipe.openLeft = false;
+                        currentPipe.openUp = true;
+                        currentPipe.openRight = false;
+                        currentPipe.openDown = true;
+                    }
+                }
+
+                if (currentPipe.image === _img_bent) {
+                    if (currentPipe.orientation === 0) {
+                        currentPipe.openLeft = true;
+                        currentPipe.openUp = false;
+                        currentPipe.openRight = false;
+                        currentPipe.openDown = true;
+                    }
+                    else if (currentPipe.orientation === 90) {
+                        currentPipe.openLeft = true;
+                        currentPipe.openUp = true;
+                        currentPipe.openRight = false;
+                        currentPipe.openDown = false;
+                    }
+                    else if (currentPipe.orientation === 180) {
+                        currentPipe.openLeft = false;
+                        currentPipe.openUp = true;
+                        currentPipe.openRight = true;
+                        currentPipe.openDown = false;
+                    }
+                    else if (currentPipe.orientation === 270) {
+                        currentPipe.openLeft = false;
+                        currentPipe.openUp = false;
+                        currentPipe.openRight = true;
+                        currentPipe.openDown = true;
+                    }
+
+
+
+
+                }
+
+                document.getElementById("test1").innerHTML = 'left= ' + currentPipe.openLeft;
+                document.getElementById("test2").innerHTML = 'up= ' + currentPipe.openUp;
+                document.getElementById("test3").innerHTML = 'right= ' + currentPipe.openRight;
+                document.getElementById("test4").innerHTML = 'down= ' + currentPipe.openDown;
+
+                if (NormalOrUndoClick = 1) {
+                    //Save logic
+                    historyListOpenLeft.push(currentPipe.openLeft);
+                    historyListOpenUp.push(currentPipe.openUp);
+                    historyListOpenRight.push(currentPipe.openRight);
+                    historyListOpenDown.push(currentPipe.openDown);
+
+                }
+
+                document.getElementById("testUndo").innerHTML = 'Orientation = ' + historyListOrientation + '<br />' + ' xPos ='
+                        + historyListXpos + '<br />' + ' yPos = ' + historyListYpos + '<br />' + historyListOpenUp + '<br />' + 'REDOOrientation = ' + REDOhistoryListOrientation + '<br />' + ' REDOxPos ='
+                        + REDOhistoryListXpos + '<br />' + ' REDOyPos = ' + REDOhistoryListYpos + '<br />' + REDOhistoryListOpenUp;
+                ;
+
+            }
+
+
             function checkConnection(_currentpipe_index) {
                 var pipe = _pipe_grid[_currentpipe_index];
 
@@ -598,17 +740,42 @@
                 }
                 if (_currentpipe_index === 35 && _pipe_grid[35].openRight === true) {
                     document.getElementById("demo3").innerHTML = 'YOU WON'
-					;
-					}
+                            ;
 
-					}
-					function checkWin() {
-						if (_pipe_grid[0].openLeft === true) {
-							checkConnection(0);
-						}
-					}
+                } 
 
-				
+            }
+            function checkWin() {
+                if (_pipe_grid[0].openLeft === true) {
+                    checkConnection(0); 
+                }
+            }
+            var looper;
+            var degrees = 0;
+            
+            function rotateAnimation(el,speed){
+             /* 
+                var elem = el;
+                if(navigator.userAgent.match("Chrome")){
+                        elem.style.WebkitTransform = "rotate("+degrees+ "deg)";
+                            } else if (navigator.userAgent.match("Firefox")) {
+                                elem.style.MozTransform = "rotate(" + degrees + "deg)";
+                            } else if (navigator.userAgent.match("MSIE")) {
+                                elem.style.msTransform = "rotate(" + degrees + "deg)";
+                            } else if (navigator.userAgent.match("Opera")) {
+                                elem.style.OTransform = "rotate(" + degrees + "deg)";
+                            } else {
+                                elem.style.transform = "rotate(" + degrees + "deg)";
+                            }
+                            looper = setTimeout('rotateAnimation(\'' + el + '\',' + speed + ')', speed);
+                            degrees++;
+                            if (degrees > 359) {
+                                degrees = 1;
+                            }
+                         //   document.getElementById("status").innerHTML = "rotate(" + degrees + "deg)";
+        */        
+        }
+
             //Get the pipe grid array reference
             //            var index = 0;
             //            for(i = 0;i < _pipe_grid.length;i++){
@@ -683,18 +850,24 @@
 //                }
 //            }
 
-	
-				
-			
+
+
+
         </script>
     </head>
 
     <body onload="init();">
         <canvas id="canvas" ></canvas>
         <button onclick="undo()" id='undoButton' disabled>Undo</button>
-        <button onclick="redo()"id='redoButton' disabled>Redo</button>
-         <p id="testUndo"></p>
-          <p id="ButtonWorks"></p>
+        <button onclick="redo()" id='redoButton' >Redo</button>
+       
+        <a onmouseup="undo();" href="javascript:undo();">Undo</a>
+        <a onmouseup="redo();" href="javascript:undo();">Redo</a>
+        <a onmouseup="checkWin();" href="javascript:undo();">Click Me</a>
+        
+        
+        <p id="testUndo"></p>
+        <p id="ButtonWorks"></p>
         <p id="demo"></p>
         <p id="test1"></p>
         <p id="test2"></p>
@@ -704,11 +877,12 @@
         <p id="demo1"></p>
         <p id="demo2"></p>
         <p id="demo3"></p>
-        
+
         <p id="debugConnections"></p>
-        
+
         <p id="demo4"></p>
-         
+        <p id="num_of_things_in_the_stack"></p>
+    <p id="last_element"></p>
 
     </body>
 
