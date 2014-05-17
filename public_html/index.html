@@ -275,10 +275,25 @@
                     //document.onmousemove = updatePuzzle;
                     //document.onmouseup = pipeDropped;
                 }
+                
+                if(historyListXpos[0]==null)
+                undoButton.disabled = true;
+                else{
+                undoButton.disabled = false;
+
+                }
+                //else {
+                //undoButton.disabled = 'true';}
+
+               
+                
             }
   
 			function undo(){
-				
+  
+
+                                     
+                                        
 					NormalOrUndoClick = 0;
 					
 				 	_stage.clearRect(historyListXpos[historyListXpos.length-1], historyListYpos[historyListXpos.length-1], _pipeWidth, _pipeHeight);
@@ -357,7 +372,7 @@
                     // since the context is rotated, the image will be rotated also.
                     _stage.drawImage(REDOhistoryListPipeType[REDOhistoryListPipeType.length-1], -_img_straight.width / 2, -_img_straight.width / 2);
 
-                    // weâare done with the rotating so restore the unrotated context
+                    // weï¿½are done with the rotating so restore the unrotated context
                     _stage.restore();
 
                     //add the border again after restoring the translate and rotate states.
@@ -663,7 +678,7 @@
 
     <body onload="init();">
         <canvas id="canvas" ></canvas>
-        <button disabled=true onclick="undo()">Undo</button>
+        <button onclick="undo()" id='undoButton' disabled>Undo</button>
         <button onclick="redo()">Redo</button>
          <p id="testUndo"></p>
           <p id="ButtonWorks"></p>
@@ -678,6 +693,8 @@
         <p id="demo3"></p>
         
         <p id="debugConnections"></p>
+        
+        <p id="demo4"></p>
          
 
     </body>
