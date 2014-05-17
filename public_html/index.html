@@ -42,11 +42,23 @@
 			var historyListOrientation = [];
 			var historyListPipeType = [];
 			
-			// Variables for Undo
+			var historyListOpenLeft = [];
+			var historyListOpenUp = [];
+			var historyListOpenRight = [];
+			var historyListOpenDown  = [];
+            
+            var NormalOrUndoClick;
+			
+			// Variables for Redo
 			var REDOhistoryListXpos = [];
 			var REDOhistoryListYpos = [];
 			var REDOhistoryListOrientation = [];
 			var REDOhistoryListPipeType = [];
+			
+			var REDOhistoryListOpenLeft = [];
+			var REDOhistoryListOpenUp = [];
+			var REDOhistoryListOpenRight = [];
+			var REDOhistoryListOpenDown  = [];
 			
 
             //Pipe class
@@ -196,6 +208,12 @@
 
             //On click functionality -- rotates the clicked pipe
             function onPuzzleClick(e) {
+            	
+	         	NormalOrUndoClick = 1;
+				
+				
+			
+			
                 if (e.layerX || e.layerX === 0) {
                     _mouse.x = e.layerX - _canvas.offsetLeft;
                     _mouse.y = e.layerY - _canvas.offsetTop;
@@ -229,8 +247,11 @@
 					historyListPipeType.push(_currentPipe.image);
 					
 					
+					
+					
                     updateOrientation(_currentPipe);
-
+			
+                    
                     //Check if pipe is connected to another pipe
                     //checkConnection(_currentPipe);
 
@@ -257,6 +278,9 @@
             }
   
 			function undo(){
+				
+					NormalOrUndoClick = 0;
+					
 				 	_stage.clearRect(historyListXpos[historyListXpos.length-1], historyListYpos[historyListXpos.length-1], _pipeWidth, _pipeHeight);
 
                     // save the unrotated context of the canvas so we can restore it later
@@ -270,6 +294,8 @@
 					
                     updateOrientation(historyListOrientation[historyListOrientation.length-1]);
 
+               
+                   
                     //Check if pipe is connected to another pipe
                     //checkConnection(_currentPipe);
 
@@ -285,13 +311,23 @@
 
                     //add the border again after restoring the translate and rotate states.
                    _stage.strokeRect(historyListXpos[historyListXpos.length-1], historyListYpos[historyListYpos.length-1], _pipeWidth, _pipeHeight);
+                   
+                 
+                   
 				
 					//Remove action and send it to REDO stack  
 					REDOhistoryListXpos.push(historyListXpos.pop());
 					REDOhistoryListYpos.push(historyListYpos.pop());
 					REDOhistoryListOrientation.push(historyListOrientation.pop());
 					REDOhistoryListPipeType.push(historyListPipeType.pop());
-						
+					
+					
+					//Remove action and send to REDO
+					REDOhistoryListOpenLeft.push(historyListOpenLeft.pop());
+                    REDOhistoryListOpenUp.push(historyListOpenUp.pop());
+                  	REDOhistoryListOpenRight.push(historyListOpenRight.pop());
+                   	REDOhistoryListOpenDown.push(historyListOpenDown.pop());	
+					
 						
 					console.log("Undo Button Working.");
 			}
@@ -412,6 +448,10 @@
                         currentPipe.openRight = true;
                         currentPipe.openDown = true;
                     }
+                   
+                        
+       
+                    
                 }
 
                 document.getElementById("test1").innerHTML = 'left= ' + currentPipe.openLeft;
@@ -419,8 +459,17 @@
                 document.getElementById("test3").innerHTML = 'right= ' + currentPipe.openRight;
                 document.getElementById("test4").innerHTML = 'down= ' + currentPipe.openDown;
                 
+                 if (NormalOrUndoClick = 1){
+                 		//Save logic
+					historyListOpenLeft.push(currentPipe.openLeft);
+                    historyListOpenUp.push(currentPipe.openUp);
+                  	historyListOpenRight.push(currentPipe.openRight);
+                   	historyListOpenDown.push(currentPipe.openDown);	
+                 	
+                 }   
+                
                 document.getElementById("testUndo").innerHTML = 'Orientation = '+ historyListOrientation  +   '<br />' +' xPos ='
-                + historyListXpos +  '<br />' + ' yPos = ' + historyListYpos;
+                + historyListXpos +  '<br />' + ' yPos = ' + historyListYpos + '<br />' + historyListOpenUp;
 
             }
 		
@@ -614,7 +663,7 @@
 
     <body onload="init();">
         <canvas id="canvas" ></canvas>
-        <button onclick="undo()">Undo</button>
+        <button disabled=true onclick="undo()">Undo</button>
         <button onclick="redo()">Redo</button>
          <p id="testUndo"></p>
           <p id="ButtonWorks"></p>
