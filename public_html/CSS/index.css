@@ -1,11 +1,11 @@
 p {margin-left:10px;}
 body {  
     background-color:#F99379;
-        position:relative;
-        top: 200px;
-        left: 420px;
-        right: -420px;
-        bottom: -191px;
+        position:absolute;
+        top: 0px;
+        left: 25%;
+        right: 25%;
+        bottom: 0px;
 }
 a {
 	position: absolute;
