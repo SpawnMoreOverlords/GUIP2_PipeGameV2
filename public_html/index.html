@@ -220,22 +220,13 @@
 
                 //HistoryList(_currentPipe);
 
-                if (_currentPipe !== null) {
+                if (_currentPipe !== null) {    
                     updateOrientation(_currentPipe);
                     AnimationLoop(_currentPipe);
                     //adds it to the stack 
                     PipesStack.push(_currentPipe);
                     document.getElementById("num_of_things_in_the_stack").innerHTML = 'num_of_things_in_the_stack: ' + PipesStack.length;
-
-
-
-
-
                 }
-
-
-
-
             }
 
             function undo() {
@@ -582,6 +573,7 @@
             function AnimationLoop(Pipe) {
                 var looper;
                 var ending = true;
+                document.onmousedown = null;
                 looper = setTimeout(function() {
                     AnimationLoopCounter++;
                     if (AnimationLoopCounter % 90 === 0) {
@@ -595,7 +587,7 @@
                     if (!ending)
                     {
                         Rotating(Pipe, 90,1);
-                        //updateOrientation(Pipe);
+                        document.onmousedown = onPuzzleClick;
                     }
                     else {
                         Rotating(Pipe, AnimationLoopCounter,0.5);
