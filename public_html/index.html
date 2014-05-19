@@ -217,9 +217,12 @@
                 //HistoryList(_currentPipe);
 
                 if (_currentPipe !== null) {
-                    
-                    AnimationLoop(_currentPipe);
                     updateOrientation(_currentPipe);
+                    AnimationLoop(_currentPipe);
+                     //adds it to the stack 
+                    PipesStack.push(_currentPipe);
+                    document.getElementById("num_of_things_in_the_stack").innerHTML = 'num_of_things_in_the_stack: ' + PipesStack.length;
+
                     
 
 
@@ -574,7 +577,7 @@
                 var ending = true;
                 looper = setTimeout(function() {
                     AnimationLoopCounter++;
-                    if (AnimationLoopCounter === 90) {
+                    if (AnimationLoopCounter%90===0) {
                         clearTimeout(looper);
                         //document.getElementById("status1").innerHTML = counter;
                         AnimationLoopCounter = 0;
@@ -584,7 +587,7 @@
                     //_stage.clearRect(last_pipe_in_redo.xPos, last_pipe_in_redo.yPos, _pipeWidth, _pipeHeight);
                     if (!ending)
                     {
-                        Rotating(Pipe, 90);
+                        //Rotating(Pipe, 90);
                         //updateOrientation(Pipe);
                     }
                     else {
@@ -607,19 +610,11 @@
                 // move to the center of the canvas
                 _stage.translate(Pipe.xPos + (_pipeWidth / 2), _currentPipe.yPos + (_pipeHeight / 2));
 
-                _stage.globalAlpha = 1; //Set transparency 
-
-
-                //updateOrientation(Pipe);
-                //adds it to the stack 
-                PipesStack.push(Pipe);
-                document.getElementById("num_of_things_in_the_stack").innerHTML = 'num_of_things_in_the_stack: ' + PipesStack.length;
-
-                _stage.globalAlpha = 1; //Set transparency 							
+                _stage.globalAlpha = 1; //Set transparency					
 
 
                 // rotate the canvas to the specified degrees
-                _stage.rotate((Pipe.orientation+AnimationLoopCounter) * Math.PI / 180);
+                _stage.rotate(((Pipe.orientation+AnimationLoopCounter)-90) * Math.PI / 180);
 
                 // draw the image
                 // since the context is rotated, the image will be rotated also.
