@@ -8,9 +8,28 @@
         <title>Peach Pipe Puzzle</title>  
     </head>
 
-    <body onload="init();">
+    <body>
         
-        <canvas id="canvas" ></canvas>
+        <div id="pump"></div>
+        
+        <div id="menuWrapper">
+            <div id="newGame"></div>
+            <div id="undo"></div>
+            <div id="redo"></div>
+            <div id="help"></div>
+        </div>
+        
+        <div id="drain"></div>
+        
+        <div id="gameWrapper">
+            <script>
+                init();
+            </script>
+            <canvas id="canvas" ></canvas>
+        </div>    
+            
+        
+        
         <!--
         <button onclick="undo()" id='undoButton' disabled>Undo</button>
         <button onclick="redo()" id='redoButton' disabled>Redo</button>

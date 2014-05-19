@@ -544,7 +544,7 @@ function AnimationLoop(Pipe) {
             AnimationLoop(Pipe, AnimationLoopCounter);
         }
 
-    }, 500 / fps)
+    }, 250 / fps)
 }
 
 //Rotate and redraw the pipe

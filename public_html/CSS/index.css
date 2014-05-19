@@ -1,51 +1,63 @@
 p {margin-left:10px;}
 body {  
     background-color:#F99379;
-        position:absolute;
-        top: 0px;
-        left: 25%;
-        right: 25%;
-        bottom: 0px;
-}
-a {
-	position: absolute;
-           transition: .5s ease;
-    top: 0px;
-    left: 420px;
-    right: -420px;
-    bottom: -191px;
-    color: rgba(255,255,255,1);
-    text-decoration: none;
-    background-color: rgba(219,87,5,1);
-    font-family: 'Yanone Kaffeesatz';
-    font-weight: 700;
-    font-size: 2em;
-    display: block;
-    padding: 4px;
-    -webkit-border-radius: 8px;
-    -moz-border-radius: 8px;
-    border-radius: 8px;
-    -webkit-box-shadow: 0px 9px 0px rgba(219,31,5,1), 0px 9px 25px rgba(0,0,0,.7);
-    -moz-box-shadow: 0px 9px 0px rgba(219,31,5,1), 0px 9px 25px rgba(0,0,0,.7);
-    box-shadow: 0px 9px 0px rgba(219,31,5,1), 0px 9px 25px rgba(0,0,0,.7);
-    margin: 100px auto;
-	width: 160px;
-	text-align: center;
-	
-	-webkit-transition: all .1s ease;
-	-moz-transition: all .1s ease;
-	-ms-transition: all .1s ease;
-	-o-transition: all .1s ease;
-	transition: all .1s ease;
 }
 
-a:active {
-    -webkit-box-shadow: 0px 3px 0px rgba(219,31,5,1), 0px 3px 6px rgba(0,0,0,.9);
-    -moz-box-shadow: 0px 3px 0px rgba(219,31,5,1), 0px 3px 6px rgba(0,0,0,.9);
-    box-shadow: 0px 3px 0px rgba(219,31,5,1), 0px 3px 6px rgba(0,0,0,.9);
-    position: relative;
-    top: 6px;
+#gameWrapper {
+    position: absolute;
+    margin-top: 100px;
+    margin-left: 150px;
 }
 
-/*body {margin-left:400px }*/
-//canvas { margin-left: auto; margin-right: auto; }
+#menuWrapper {
+    background-color: white;
+    float: left;
+    margin-left: 0px; 
+    width: 602px;
+    height: 100px;
+    
+}
+
+#newGame {
+    background-color: yellow;
+    float: left;
+    width: 150px;
+    height: 100px;
+}
+
+#undo {
+    background-color: green;
+    float: left;
+    width: 150px;
+    height: 100px;
+}
+
+#redo {
+    background-color: red;
+    float: left;
+    width: 150px;
+    height: 100px;
+}
+
+#help {
+    background-color: blue;
+    float: left;
+    width: 150px;
+    height: 100px;
+}
+
+#pump {
+    background-color: blue;
+    float:left;
+    margin-top: 0px;
+    width: 150px;
+    height: 200px;
+}
+
+#drain {
+    background-color: violet;
+    float:left;
+    margin-top: 601px;
+    width: 150px;
+    height: 102px;
+}
