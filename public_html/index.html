@@ -219,11 +219,11 @@
                 if (_currentPipe !== null) {
                     updateOrientation(_currentPipe);
                     AnimationLoop(_currentPipe);
-                     //adds it to the stack 
+                    //adds it to the stack 
                     PipesStack.push(_currentPipe);
                     document.getElementById("num_of_things_in_the_stack").innerHTML = 'num_of_things_in_the_stack: ' + PipesStack.length;
 
-                    
+
 
 
 
@@ -577,7 +577,7 @@
                 var ending = true;
                 looper = setTimeout(function() {
                     AnimationLoopCounter++;
-                    if (AnimationLoopCounter%90===0) {
+                    if (AnimationLoopCounter % 90 === 0) {
                         clearTimeout(looper);
                         //document.getElementById("status1").innerHTML = counter;
                         AnimationLoopCounter = 0;
@@ -595,7 +595,7 @@
                     }
 
                     if (ending) {
-                        AnimationLoop(Pipe,AnimationLoopCounter);
+                        AnimationLoop(Pipe, AnimationLoopCounter);
                     }
 
                 }, 500 / fps)
@@ -614,7 +614,7 @@
 
 
                 // rotate the canvas to the specified degrees
-                _stage.rotate(((Pipe.orientation+AnimationLoopCounter)-90) * Math.PI / 180);
+                _stage.rotate(((Pipe.orientation + AnimationLoopCounter) - 90) * Math.PI / 180);
 
                 // draw the image
                 // since the context is rotated, the image will be rotated also.
@@ -658,7 +658,7 @@
         <p id="test3"></p>
         <p id="test4"></p>
         <button onclick="checkWin()">Click me</button>
-        
+
         <p id="demo3"></p>
 
         <p id="debugConnections"></p>
