@@ -1,9 +1,10 @@
 p {margin-left:10px;}
 body {  
-    background-color:#F99379;
+    //background-color:#F99379;
 }
 
 #gameWrapper {
+    //background-color: #0B300C;
     position: absolute;
     margin-top: 100px;
     margin-left: 150px;
@@ -47,10 +48,13 @@ body {
 }
 
 #pump {
-    background-color: blue;
+    background-image:url("topleftdesign-01.png");
+    background-repeat: no-repeat; 
+    
+    //background-color: blue;
     float:left;
     margin-top: 0px;
-    width: 150px;
+    width: 100px;
     height: 200px;
 }
 
