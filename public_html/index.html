@@ -88,6 +88,10 @@
                 _img_bent = new Image();
                 _img_bent.addEventListener('load', onImage, false);
                 _img_bent.src = "bentpipe-01.png";
+                
+                _img_win = new Image();
+                _img_win.addEventListener('load', onImage, false);
+                _img_win.src = "youwin.png";
             }
 
             // Set the width and height for each pipe, dependant on the number of pipes
@@ -562,6 +566,9 @@
                 if (_currentpipe_index === 35 && _pipe_grid[35].openRight === true) {
                     document.getElementById("demo3").innerHTML = 'YOU WON'
                             ;
+                    //Draw a start up image :)
+                    _stage.clearRect(0, 0, _puzzleWidth, _puzzleHeight);
+                    _stage.drawImage(_img_win, 0, 0, _puzzleWidth, _puzzleHeight, 0, 100, _puzzleWidth, _puzzleHeight); 
 
                 }
 
