@@ -20,7 +20,7 @@
             var fps = 60;
             var interval = 1000 / fps;
 
-
+            //Transparency = 0.5;
             var AnimationLoopCounter = 0;
 
             // Color for when hovering over a square (NOT NECESSERY)
@@ -594,11 +594,11 @@
                     //_stage.clearRect(last_pipe_in_redo.xPos, last_pipe_in_redo.yPos, _pipeWidth, _pipeHeight);
                     if (!ending)
                     {
-                        //Rotating(Pipe, 90);
+                        Rotating(Pipe, 90,1);
                         //updateOrientation(Pipe);
                     }
                     else {
-                        Rotating(Pipe, AnimationLoopCounter);
+                        Rotating(Pipe, AnimationLoopCounter,0.5);
                     }
 
                     if (ending) {
@@ -607,7 +607,7 @@
 
                 }, 500 / fps)
             }
-            function Rotating(Pipe, AnimationLoopCounter) {
+            function Rotating(Pipe, AnimationLoopCounter,Transparency) {
                 _stage.clearRect(Pipe.xPos, Pipe.yPos, _pipeWidth, _pipeHeight);
 
                 // save the unrotated context of the canvas so we can restore it later
@@ -617,7 +617,7 @@
                 // move to the center of the canvas
                 _stage.translate(Pipe.xPos + (_pipeWidth / 2), _currentPipe.yPos + (_pipeHeight / 2));
 
-                _stage.globalAlpha = 1; //Set transparency					
+                _stage.globalAlpha = Transparency; //Set transparency					
 
 
                 // rotate the canvas to the specified degrees
