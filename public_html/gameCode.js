@@ -197,7 +197,8 @@ function onPuzzleClick(e) {
         //adds it to the stack 
         PipesStack.push(_currentPipe);
         document.getElementById("num_of_things_in_the_stack").innerHTML = 'num_of_things_in_the_stack: ' + PipesStack.length;
-        document.getElementById("undoButton").disabled = false;    
+        document.getElementById("undoButton").disabled = false;  
+        
     }
 }
 
