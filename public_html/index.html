@@ -18,7 +18,7 @@
             <div id="redo"></div>
             <div id="win"></div>
             <div id="help"></div>
-        </div>
+            </div>
         
         <div id="drain"></div>
         
@@ -27,6 +27,11 @@
                 init();
             </script>
             <canvas id="canvas" ></canvas>
+            
+            <button onclick="checkWin()">Check Win</button>
+            <button onclick="undo()" id='undoButton' disabled>Undo</button>
+            <button onclick="redo()" id='redoButton' disabled>Redo</button>
+            <button value="Refresh" onClick="history.go()" >New Game</button>
         </div>    
             
         
@@ -39,7 +44,7 @@
         <a onmouseup="undo();" href="javascript:undo();">Undo</a>
         <a onmouseup="redo();" href="javascript:undo();">Redo</a>
          <a onmouseup="checkWin();" href="javascript:undo();">Click Me</a> 
-        -->
+        
 
         <p id="testUndo"></p>
         <p id="ButtonWorks"></p>
@@ -49,7 +54,7 @@
         <p id="test3"></p>
         <p id="test4"></p>
         
-        <button onclick="checkWin()">Click me</button>
+        
 
         <p id="demo3"></p>
 
@@ -58,7 +63,7 @@
         <p id="demo4"></p>
         <p id="num_of_things_in_the_stack"></p>
         <p id="last_element"></p>
-
+            -->
     </body>
 
 </html>

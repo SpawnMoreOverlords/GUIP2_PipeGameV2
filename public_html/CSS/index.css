@@ -1,4 +1,5 @@
-p {margin-left:10px;}
+p {margin-left:10px;
+    color:white;}
 body {  
     //background-color:#F99379;
 }
@@ -6,15 +7,15 @@ body {
 #gameWrapper {
     //background-color: #0B300C;
     position: absolute;
-    margin-top: 100px;
+    margin-top: 60px;
     margin-left: 150px;
 }
 
 #menuWrapper {
     background-color: white;
-    float: left;
-    margin-top: 0px;
-    margin-left: 0px; 
+    position: absolute;
+    margin-top: 60px;
+    margin-left: 755px; 
     width: 602px;
     height: 100px;
     
@@ -35,21 +36,21 @@ body {
 }
 
 #redo {
-    background-color: red;
+    background-color: yellow;
     float: left;
     width: 100px;
     height: 100px;
 }
 
 #win {
-    background-color: violet;
+    background-color: green;
     float: left;
     width: 100px;
     height: 100px;
 }
 
 #help {
-    background-color: blue;
+    background-color: yellow;
     float: left;
     width: 100px;
     height: 100px;
@@ -62,7 +63,7 @@ body {
     //background-color: blue;
     float:left;
     margin-left: 50px;
-    margin-top: 42px;
+    margin-top: 2px;
     width: 100px;
     height: 157px;
 }
@@ -73,7 +74,7 @@ body {
     
     //background-color: violet;
     position: absolute;
-    margin-top: 224px;
+    margin-top: 184px;
     margin-left: 715px;
     width: 470px;
     height: 491px;

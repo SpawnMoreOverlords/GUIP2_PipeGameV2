@@ -82,7 +82,7 @@ function setCanvas() {
     _canvas.width = _puzzleWidth;
     _canvas.height = _puzzleHeight;
     _canvas.style.border = "1px solid black";
-    //_canvas.offsetTop = 200;
+    //_canvas.offsetLeft = 200;
 }
 
 // Init variables for the pipe puzzle (before the pipes are randomized)
@@ -188,7 +188,7 @@ function onPuzzleClick(e) {
         _mouse.y = e.offsetY - _canvas.offsetTop;
     }
     _currentPipe = checkpipeClicked();
-
+    
     //HistoryList(_currentPipe);
 
     if (_currentPipe !== null) {    
@@ -196,10 +196,11 @@ function onPuzzleClick(e) {
         AnimationLoop(_currentPipe);
         //adds it to the stack 
         PipesStack.push(_currentPipe);
-        document.getElementById("num_of_things_in_the_stack").innerHTML = 'num_of_things_in_the_stack: ' + PipesStack.length;
+        //document.getElementById("num_of_things_in_the_stack").innerHTML = 'num_of_things_in_the_stack: ' + PipesStack.length;
         document.getElementById("undoButton").disabled = false;  
         
     }
+    
 }
 
 function undo() {
@@ -213,7 +214,7 @@ function undo() {
     //push an item to the redostack and enable  the button
     RedoStack.push(last_pipe);
     document.getElementById("redoButton").disabled = false;
-    document.getElementById("last_element").innerHTML = 'Last Elements XPosition: ' + last_pipe.xPos;
+    //document.getElementById("last_element").innerHTML = 'Last Elements XPosition: ' + last_pipe.xPos;
 
     //REDRAW:
     _stage.clearRect(last_pipe.xPos, last_pipe.yPos, _pipeWidth, _pipeHeight);
@@ -245,7 +246,7 @@ function redo() {
 
     //push a pipe to the undo stack, enable the undo button.
     PipesStack.push(last_pipe_in_redo);
-    document.getElementById("num_of_things_in_the_stack").innerHTML = 'num_of_things_in_the_stack: ' + PipesStack.length;
+    //document.getElementById("num_of_things_in_the_stack").innerHTML = 'num_of_things_in_the_stack: ' + PipesStack.length;
     document.getElementById("undoButton").disabled = false;
 
     //REDRAW:
@@ -275,12 +276,20 @@ function checkpipeClicked() {
     var pipe;
     for (i = 0; i < _pipe_grid.length; i++) {
         pipe = _pipe_grid[i];
+        
+            console.log('working?? ');
+        
+        if (_mouse.x < pipe.xPos || _mouse.x > (pipe.xPos + _pipeWidth) || _mouse.y < pipe.yPos || _mouse.y > (pipe.yPos + _pipeHeight)) {
+            //pipe NOT HIT
+        }
         if (_mouse.x < pipe.xPos || _mouse.x > (pipe.xPos + _pipeWidth) || _mouse.y < pipe.yPos || _mouse.y > (pipe.yPos + _pipeHeight)) {
             //pipe NOT HIT
         }
         else {
             return pipe;
         }
+    
+        
     }
     return null;
 }
@@ -343,10 +352,10 @@ function updateOrientation(currentPipe) {
         }
     }
 
-    document.getElementById("test1").innerHTML = 'left= ' + currentPipe.openLeft;
-    document.getElementById("test2").innerHTML = 'up= ' + currentPipe.openUp;
-    document.getElementById("test3").innerHTML = 'right= ' + currentPipe.openRight;
-    document.getElementById("test4").innerHTML = 'down= ' + currentPipe.openDown;
+    //document.getElementById("test1").innerHTML = 'left= ' + currentPipe.openLeft;
+    //document.getElementById("test2").innerHTML = 'up= ' + currentPipe.openUp;
+    //document.getElementById("test3").innerHTML = 'right= ' + currentPipe.openRight;
+    //document.getElementById("test4").innerHTML = 'down= ' + currentPipe.openDown;
 }
 
 function updateOrientationForUndo(currentPipe) {
@@ -399,10 +408,10 @@ function updateOrientationForUndo(currentPipe) {
         }
     }
 
-    document.getElementById("test1").innerHTML = 'left= ' + currentPipe.openLeft;
-    document.getElementById("test2").innerHTML = 'up= ' + currentPipe.openUp;
-    document.getElementById("test3").innerHTML = 'right= ' + currentPipe.openRight;
-    document.getElementById("test4").innerHTML = 'down= ' + currentPipe.openDown;
+    //document.getElementById("test1").innerHTML = 'left= ' + currentPipe.openLeft;
+    //document.getElementById("test2").innerHTML = 'up= ' + currentPipe.openUp;
+    //document.getElementById("test3").innerHTML = 'right= ' + currentPipe.openRight;
+    //document.getElementById("test4").innerHTML = 'down= ' + currentPipe.openDown;
 }
 
 //Check if there is a connection between the start and end points :)!
@@ -411,7 +420,7 @@ function checkConnection(_currentpipe_index) {
 
     if (pipe.image === _img_straight)
     {
-        //document.getElementById("demo1").innerHTML = "hello" + _currentpipe_index;
+        //document.getElementById("demo1").innerHTML = "hello" + _currentpipe_index; (already commented out)
         if (_currentpipe_index !== 35 && _currentpipe_index !== 0 && _currentpipe_index !== 35 && pipe.openLeft === true && pipe.openRight === true && _pipe_grid[_currentpipe_index + 1].openLeft === true && (_previouspipe_index - _currentpipe_index === -1) && (_currentpipe_index + 1 >= 0 && _currentpipe_index + 1 < 36)) {
             _currentpipe_index += 1;
             _previouspipe_index = _currentpipe_index;
@@ -503,7 +512,7 @@ function checkConnection(_currentpipe_index) {
         }
     }
     if (_currentpipe_index === 35 && _pipe_grid[35].openRight === true) {
-        document.getElementById("demo3").innerHTML = 'YOU WON';
+        //document.getElementById("demo3").innerHTML = 'YOU WON';
         //Draw a start up image :)
         _stage.clearRect(0, 0, _puzzleWidth, _puzzleHeight);
         _stage.drawImage(_img_win, 0, 0, _puzzleWidth, _puzzleHeight, 0, 100, _puzzleWidth, _puzzleHeight); 
