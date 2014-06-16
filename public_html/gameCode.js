@@ -63,6 +63,10 @@ function init() {
     _img_win = new Image();
     _img_win.addEventListener('load', onImage, false);
     _img_win.src = "youwin.png";
+    
+    _img_help = new Image();
+    _img_help.addEventListener('load', onImage, false);
+    _img_help.src = "glasspane-help.jpg";
 }
 
 // Set the width and height for each pipe, dependant on the number of pipes
@@ -174,6 +178,37 @@ function drawPuzzle() {
     document.onmousedown = onPuzzleClick;
 }
 
+//To redraw the whole puzzle mid game. 
+function redrawPuzzle () {
+    //Clear all
+    _stage.clearRect(0, 0, _puzzleWidth, _puzzleHeight);
+    var i;
+    var pipe;
+    for (i = 0; i < _pipe_grid.length; i++) {
+        
+        //Get each pipe out of the pipe_grid array
+        pipe = _pipe_grid[i];
+        
+        
+        //Then REDRAW its current position/orientation/etc..
+        // save the unrotated context of the canvas so we can restore it later
+        // the alternative is to untranslate & unrotate after drawing
+        _stage.save();
+        // move to the center of the canvas
+        _stage.translate(pipe.xPos + (_pipeWidth / 2), pipe.yPos + (_pipeHeight / 2));
+        _stage.globalAlpha = 1; //Set transparency					
+        // rotate the canvas to the specified degrees
+        _stage.rotate(pipe.orientation * Math.PI / 180);
+        // draw the image
+        // since the context is rotated, the image will be rotated also.
+        _stage.drawImage(pipe.image, -_img_straight.width / 2, -_img_straight.width / 2);
+        // we’re done with the rotating so restore the unrotated context
+        _stage.restore();
+        //add the border again after restoring the translate and rotate states.
+        _stage.strokeRect(pipe.xPos, pipe.yPos, _pipeWidth, _pipeHeight);
+    }
+}
+
 //On click functionality -- rotates the clicked pipe
 function onPuzzleClick(e) {
 
@@ -191,14 +226,19 @@ function onPuzzleClick(e) {
     
     //HistoryList(_currentPipe);
 
-    if (_currentPipe !== null) {    
+    if (_currentPipe !== null) {
+        
+        //Redraw the whole grid, to cover the glasspane help system if the 
+        //user has pressed it previously.
+        redrawPuzzle();
+        
+        
         updateOrientation(_currentPipe);
         AnimationLoop(_currentPipe);
         //adds it to the stack 
         PipesStack.push(_currentPipe);
         //document.getElementById("num_of_things_in_the_stack").innerHTML = 'num_of_things_in_the_stack: ' + PipesStack.length;
         document.getElementById("undoButton").disabled = false;  
-        
     }
     
 }
@@ -544,10 +584,16 @@ function AnimationLoop(Pipe) {
         if (!ending)
         {
             Rotating(Pipe, 90,1);
+            //Redraw whole grid to remove left over pixels that've leaked into
+            //other pipe squares during the animation process.
+            redrawPuzzle();
             document.onmousedown = onPuzzleClick;
         }
         else {
-            Rotating(Pipe, AnimationLoopCounter,0.5);
+            //Redraw whole grid to remove left over pixels that've leaked into
+            //other pipe squares during the animation process.
+            redrawPuzzle();
+            Rotating(Pipe, AnimationLoopCounter,0.5);   
         }
 
         if (ending) {
@@ -576,6 +622,13 @@ function Rotating(Pipe, AnimationLoopCounter,Transparency) {
     _stage.restore();
     //add the border again after restoring the translate and rotate states.
     _stage.strokeRect(Pipe.xPos, Pipe.yPos, _pipeWidth, _pipeHeight);
+}
+
+function drawHelp () {
+   //Draw glasspane help image
+   _stage.globalAlpha = 0.75; //Set transparency
+   _stage.drawImage(_img_help, 0, 0, _puzzleWidth, _puzzleHeight, 0, 0, _puzzleWidth, _puzzleHeight); 
+   _stage.globalAlpha = 1; //Set transparency
 }
 
 
