@@ -244,6 +244,7 @@ function onPuzzleClick(e) {
 }
 
 function undo() {
+    redrawPuzzle();
     var last_pipe = PipesStack.pop();
 
     //if undo stack is empty then disable the button.
@@ -277,6 +278,7 @@ function undo() {
 }
 
 function redo() {
+    redrawPuzzle();
     var last_pipe_in_redo = RedoStack.pop();
 
     //if undo stack is empty then disable the button.
